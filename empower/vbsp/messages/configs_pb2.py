@@ -14,14 +14,16 @@ from google.protobuf import descriptor_pb2
 _sym_db = _symbol_database.Default()
 
 
+import empower.vbsp.messages.ran_sharing_pb2 as ran__sharing__pb2
 
 
 DESCRIPTOR = _descriptor.FileDescriptor(
   name='configs.proto',
   package='',
   syntax='proto2',
-  serialized_pb=_b('\n\rconfigs.proto\"$\n\x14ue_rrc_meas_conf_req\x12\x0c\n\x04rnti\x18\x01 \x02(\r\"\xd7\x01\n\x0fue_capabilities\x12\x0c\n\x04\x62\x61nd\x18\x01 \x03(\r\x12\x14\n\x0crelease_3gpp\x18\x02 \x01(\r\x12\x18\n\x10interFreq_SI_acq\x18\x03 \x01(\x08\x12\x18\n\x10intraFreq_SI_acq\x18\x04 \x01(\x08\x12\x14\n\x0c\x41\x35_A4_events\x18\x05 \x01(\x08\x12\x16\n\x0einterFreq_meas\x18\x06 \x01(\x08\x12\x1e\n\x16intraFreq_ref_per_meas\x18\x07 \x01(\x08\x12\x1e\n\x16interFreq_ref_per_meas\x18\x08 \x01(\x08\"N\n\x10\x63\x65lls_to_measure\x12\x13\n\x0bphy_cell_id\x18\x01 \x01(\r\x12%\n\x0coffset_range\x18\x02 \x01(\x0e\x32\x0f.Q_offset_range\"?\n\x0f\x62lacklist_cells\x12\x11\n\tstart_pci\x18\x01 \x01(\r\x12\x19\n\x05range\x18\x02 \x01(\x0e\x32\n.pci_range\"\x90\x01\n\x0emeas_obj_EUTRA\x12\x14\n\x0c\x63\x61rrier_freq\x18\x01 \x01(\r\x12!\n\x07meas_bw\x18\x02 \x01(\x0e\x32\x10.allowed_meas_bw\x12 \n\x05\x63\x65lls\x18\x03 \x03(\x0b\x32\x11.cells_to_measure\x12#\n\tbkl_cells\x18\x04 \x03(\x0b\x32\x10.blacklist_cells\"Y\n\x0bmeas_object\x12\x14\n\tmeasObjId\x18\x01 \x02(\x05:\x01\x30\x12(\n\rmeasObj_EUTRA\x18\x02 \x01(\x0b\x32\x0f.meas_obj_EUTRAH\x00\x42\n\n\x08meas_obj\"6\n\x0crep_conf_per\x12&\n\x07purpose\x18\x01 \x01(\x0e\x32\x15.periodic_rep_purpose\">\n\x0fthreshold_EUTRA\x12\x0e\n\x04RSRP\x18\x01 \x01(\x05H\x00\x12\x0e\n\x04RSRQ\x18\x02 \x01(\x05H\x00\x42\x0b\n\tthreshold\"5\n\x0brep_conf_a1\x12&\n\x0c\x61\x31_threshold\x18\x01 \x01(\x0b\x32\x10.threshold_EUTRA\"5\n\x0brep_conf_a2\x12&\n\x0c\x61\x32_threshold\x18\x01 \x01(\x0b\x32\x10.threshold_EUTRA\"9\n\x0brep_conf_a3\x12\x11\n\ta3_offset\x18\x01 \x01(\x05\x12\x17\n\x0freport_on_leave\x18\x02 \x01(\r\"5\n\x0brep_conf_a4\x12&\n\x0c\x61\x34_threshold\x18\x01 \x01(\x0b\x32\x10.threshold_EUTRA\"_\n\x0brep_conf_a5\x12\'\n\ra5_threshold1\x18\x01 \x01(\x0b\x32\x10.threshold_EUTRA\x12\'\n\ra5_threshold2\x18\x02 \x01(\x0b\x32\x10.threshold_EUTRA\"\xf1\x03\n\x0erep_conf_EUTRA\x12#\n\nperiodical\x18\x01 \x01(\x0b\x32\r.rep_conf_perH\x00\x12\x1a\n\x02\x61\x31\x18\x02 \x01(\x0b\x32\x0c.rep_conf_a1H\x00\x12\x1a\n\x02\x61\x32\x18\x03 \x01(\x0b\x32\x0c.rep_conf_a2H\x00\x12\x1a\n\x02\x61\x33\x18\x04 \x01(\x0b\x32\x0c.rep_conf_a3H\x00\x12\x1a\n\x02\x61\x34\x18\x05 \x01(\x0b\x32\x0c.rep_conf_a4H\x00\x12\x1a\n\x02\x61\x35\x18\x06 \x01(\x0b\x32\x0c.rep_conf_a5H\x00\x12\x12\n\nhysteresis\x18\x07 \x01(\x05\x12$\n\ntrigg_time\x18\x08 \x01(\x0e\x32\x10.time_to_trigger\x12&\n\x0btrigg_quant\x18\t \x01(\x0e\x32\x11.trigger_quantity\x12&\n\x0creport_quant\x18\n \x01(\x0e\x32\x10.report_quantity\x12\x15\n\rmax_rep_cells\x18\x0b \x01(\r\x12&\n\x0crep_interval\x18\x0c \x01(\x0e\x32\x10.report_interval\x12\"\n\nrep_amount\x18\r \x01(\x0e\x32\x0e.report_amount\x12\x33\n\x11ue_rxtx_time_diff\x18\x0e \x01(\x0e\x32\x18.ue_rxtx_time_differenceB\x0c\n\nconf_EUTRA\"Y\n\rreport_config\x12\x17\n\x0creportConfId\x18\x01 \x02(\x05:\x01\x30\x12#\n\x08rc_EUTRA\x18\x02 \x01(\x0b\x32\x0f.rep_conf_EUTRAH\x00\x42\n\n\x08rep_conf\"I\n\x0fmeas_identifier\x12\n\n\x02id\x18\x01 \x02(\x05\x12\x12\n\nmeasObj_id\x18\x02 \x02(\x05\x12\x16\n\x0ereport_conf_id\x18\x03 \x02(\x05\"\xe8\x02\n\x15ue_rrc_meas_conf_repl\x12\x0c\n\x04rnti\x18\x01 \x02(\r\x12 \n\x06status\x18\x02 \x02(\x0e\x32\x10.conf_req_status\x12 \n\x0cue_rrc_state\x18\x03 \x01(\x0e\x32\n.rrc_state\x12(\n\rmeas_gap_patt\x18\x04 \x01(\x0e\x32\x11.meas_gap_pattern\x12!\n\x19meas_gap_config_sf_offset\x18\x05 \x01(\r\x12&\n\x0c\x63\x61pabilities\x18\x06 \x01(\x0b\x32\x10.ue_capabilities\x12\x1b\n\x05m_obj\x18\x07 \x03(\x0b\x32\x0c.meas_object\x12\x1e\n\x06r_conf\x18\x08 \x03(\x0b\x32\x0e.report_config\x12!\n\x07meas_id\x18\t \x03(\x0b\x32\x10.meas_identifier\x12\x0c\n\x04\x66req\x18\n \x01(\x02\x12\x1a\n\x08pcell_DD\x18\x0b \x01(\x0e\x32\x08.DD_mode\"v\n\x10ue_rrc_meas_conf\x12$\n\x03req\x18\x01 \x01(\x0b\x32\x15.ue_rrc_meas_conf_reqH\x00\x12&\n\x04repl\x18\x02 \x01(\x0b\x32\x16.ue_rrc_meas_conf_replH\x00\x42\x14\n\x12ue_rrc_meas_conf_m\"\x1b\n\nues_id_req\x12\r\n\x05\x64ummy\x18\x01 \x01(\x05\"8\n\tactive_ue\x12\x0c\n\x04rnti\x18\x01 \x02(\r\x12\x0c\n\x04imsi\x18\x02 \x01(\x04\x12\x0f\n\x07plmn_id\x18\x03 \x02(\r\":\n\x0binactive_ue\x12\x0c\n\x04rnti\x18\x01 \x02(\r\x12\x0c\n\x04imsi\x18\x02 \x01(\x04\x12\x0f\n\x07plmn_id\x18\x03 \x02(\r\"w\n\x0bues_id_repl\x12 \n\x06status\x18\x01 \x02(\x0e\x32\x10.conf_req_status\x12 \n\x0c\x61\x63tive_ue_id\x18\x02 \x03(\x0b\x32\n.active_ue\x12$\n\x0einactive_ue_id\x18\x03 \x03(\x0b\x32\x0c.inactive_ue\"N\n\x06ues_id\x12\x1a\n\x03req\x18\x01 \x01(\x0b\x32\x0b.ues_id_reqH\x00\x12\x1c\n\x04repl\x18\x02 \x01(\x0b\x32\x0c.ues_id_replH\x00\x42\n\n\x08ues_id_m\"\'\n\reNB_cells_req\x12\x16\n\x0e\x65nb_info_types\x18\x01 \x02(\r\">\n\x10\x63\x65ll_information\x12\x14\n\x0cphys_cell_id\x18\x01 \x02(\r\x12\x14\n\x0c\x63\x61rrier_freq\x18\x02 \x02(\r\"2\n\x0e\x65NB_cells_repl\x12 \n\x05\x63\x65lls\x18\x01 \x03(\x0b\x32\x11.cell_information\"Z\n\teNB_cells\x12\x1d\n\x03req\x18\x01 \x01(\x0b\x32\x0e.eNB_cells_reqH\x00\x12\x1f\n\x04repl\x18\x02 \x01(\x0b\x32\x0f.eNB_cells_replH\x00\x42\r\n\x0b\x65NB_cells_m*9\n\x10meas_gap_pattern\x12\x0b\n\x07MGP_GP0\x10\x00\x12\x0b\n\x07MGP_GP1\x10\x01\x12\x0b\n\x07MGP_OFF\x10\x02*\x91\x01\n\trrc_state\x12\x13\n\x0fRS_RRC_INACTIVE\x10\x00\x12\x0f\n\x0bRS_RRC_IDLE\x10\x01\x12\x16\n\x12RS_RRC_SI_RECEIVED\x10\x02\x12\x14\n\x10RS_RRC_CONNECTED\x10\x03\x12\x17\n\x13RS_RRC_RECONFIGURED\x10\x04\x12\x17\n\x13RS_RRC_HO_EXECUTION\x10\x05*_\n\x0f\x61llowed_meas_bw\x12\n\n\x06\x41MBW_6\x10\x00\x12\x0b\n\x07\x41MBW_15\x10\x01\x12\x0b\n\x07\x41MBW_25\x10\x02\x12\x0b\n\x07\x41MBW_50\x10\x03\x12\x0b\n\x07\x41MBW_75\x10\x04\x12\x0c\n\x08\x41MBW_100\x10\x05*\xc2\x03\n\x0eQ_offset_range\x12\r\n\tQOR_dB_24\x10\x00\x12\r\n\tQOR_dB_22\x10\x01\x12\r\n\tQOR_dB_20\x10\x02\x12\r\n\tQOR_dB_18\x10\x03\x12\r\n\tQOR_dB_16\x10\x04\x12\r\n\tQOR_dB_14\x10\x05\x12\r\n\tQOR_dB_12\x10\x06\x12\r\n\tQOR_dB_10\x10\x07\x12\x0c\n\x08QOR_dB_8\x10\x08\x12\x0c\n\x08QOR_dB_6\x10\t\x12\x0c\n\x08QOR_dB_5\x10\n\x12\x0c\n\x08QOR_dB_4\x10\x0b\x12\x0c\n\x08QOR_dB_3\x10\x0c\x12\x0c\n\x08QOR_dB_2\x10\r\x12\x0c\n\x08QOR_dB_1\x10\x0e\x12\x0b\n\x07QOR_dB0\x10\x0f\x12\x0b\n\x07QOR_1dB\x10\x10\x12\x0b\n\x07QOR_2dB\x10\x11\x12\x0b\n\x07QOR_3dB\x10\x12\x12\x0b\n\x07QOR_4dB\x10\x13\x12\x0b\n\x07QOR_5dB\x10\x14\x12\x0b\n\x07QOR_6dB\x10\x15\x12\x0b\n\x07QOR_8dB\x10\x16\x12\x0c\n\x08QOR_10dB\x10\x17\x12\x0c\n\x08QOR_12dB\x10\x18\x12\x0c\n\x08QOR_14dB\x10\x19\x12\x0c\n\x08QOR_16dB\x10\x1a\x12\x0c\n\x08QOR_18dB\x10\x1b\x12\x0c\n\x08QOR_20dB\x10\x1c\x12\x0c\n\x08QOR_22dB\x10\x1d\x12\x0c\n\x08QOR_24dB\x10\x1e*\xf3\x01\n\tpci_range\x12\x0b\n\x07PCIR_n4\x10\x00\x12\x0b\n\x07PCIR_n8\x10\x01\x12\x0c\n\x08PCIR_n12\x10\x02\x12\x0c\n\x08PCIR_n16\x10\x03\x12\x0c\n\x08PCIR_n24\x10\x04\x12\x0c\n\x08PCIR_n32\x10\x05\x12\x0c\n\x08PCIR_n48\x10\x06\x12\x0c\n\x08PCIR_n64\x10\x07\x12\x0c\n\x08PCIR_n84\x10\x08\x12\x0c\n\x08PCIR_n96\x10\t\x12\r\n\tPCIR_n128\x10\n\x12\r\n\tPCIR_n168\x10\x0b\x12\r\n\tPCIR_n252\x10\x0c\x12\r\n\tPCIR_n504\x10\r\x12\x0f\n\x0bPCIR_spare2\x10\x0e\x12\x0f\n\x0bPCIR_spare1\x10\x0f*\xa0\x02\n\x0ftime_to_trigger\x12\r\n\tTTRIG_ms0\x10\x00\x12\x0e\n\nTTRIG_ms40\x10\x01\x12\x0e\n\nTTRIG_ms64\x10\x02\x12\x0e\n\nTTRIG_ms80\x10\x03\x12\x0f\n\x0bTTRIG_ms100\x10\x04\x12\x0f\n\x0bTTRIG_ms128\x10\x05\x12\x0f\n\x0bTTRIG_ms160\x10\x06\x12\x0f\n\x0bTTRIG_ms256\x10\x07\x12\x0f\n\x0bTTRIG_ms320\x10\x08\x12\x0f\n\x0bTTRIG_ms480\x10\t\x12\x0f\n\x0bTTRIG_ms512\x10\n\x12\x0f\n\x0bTTRIG_ms640\x10\x0b\x12\x10\n\x0cTTRIG_ms1024\x10\x0c\x12\x10\n\x0cTTRIG_ms1280\x10\r\x12\x10\n\x0cTTRIG_ms2560\x10\x0e\x12\x10\n\x0cTTRIG_ms5120\x10\x0f*S\n\x14periodic_rep_purpose\x12 \n\x1cPERRP_REPORT_STRONGEST_CELLS\x10\x00\x12\x19\n\x15PERRP_REPORT_CGI_INFO\x10\x01*2\n\x10trigger_quantity\x12\x0e\n\nTRIGQ_RSRP\x10\x00\x12\x0e\n\nTRIGQ_RSRQ\x10\x01*@\n\x0freport_quantity\x12\x1e\n\x1aREPQ_SAME_AS_TRIGGER_QUANT\x10\x00\x12\r\n\tREPQ_BOTH\x10\x01*\xb7\x02\n\x0freport_interval\x12\x10\n\x0cREPINT_ms120\x10\x00\x12\x10\n\x0cREPINT_ms240\x10\x01\x12\x10\n\x0cREPINT_ms480\x10\x02\x12\x10\n\x0cREPINT_ms640\x10\x03\x12\x11\n\rREPINT_ms1024\x10\x04\x12\x11\n\rREPINT_ms2048\x10\x05\x12\x11\n\rREPINT_ms5120\x10\x06\x12\x12\n\x0eREPINT_ms10240\x10\x07\x12\x0f\n\x0bREPINT_min1\x10\x08\x12\x0f\n\x0bREPINT_min6\x10\t\x12\x10\n\x0cREPINT_min12\x10\n\x12\x10\n\x0cREPINT_min30\x10\x0b\x12\x10\n\x0cREPINT_min60\x10\x0c\x12\x11\n\rREPINT_spare3\x10\r\x12\x11\n\rREPINT_spare2\x10\x0e\x12\x11\n\rREPINT_spare1\x10\x0f*\x89\x01\n\rreport_amount\x12\x0c\n\x08REPAMT_1\x10\x00\x12\x0c\n\x08REPAMT_2\x10\x01\x12\x0c\n\x08REPAMT_4\x10\x02\x12\x0c\n\x08REPAMT_8\x10\x03\x12\r\n\tREPAMT_16\x10\x04\x12\r\n\tREPAMT_32\x10\x05\x12\r\n\tREPAMT_64\x10\x06\x12\x13\n\x0fREPAMT_infinity\x10\x07*-\n\x17ue_rxtx_time_difference\x12\x12\n\x0eUERXTXTD_SETUP\x10\x00*#\n\x07\x44\x44_mode\x12\x0b\n\x07\x44\x44M_FDD\x10\x00\x12\x0b\n\x07\x44\x44M_TDD\x10\x01*7\n\x0f\x63onf_req_status\x12\x11\n\rCREQS_SUCCESS\x10\x00\x12\x11\n\rCREQS_FAILURE\x10\x01**\n\x14\x65NB_cells_info_types\x12\x12\n\x0e\x45NB_CELLS_INFO\x10\x01')
-)
+  serialized_pb=_b('\n\rconfigs.proto\x1a\x11ran_sharing.proto\"$\n\x14ue_rrc_meas_conf_req\x12\x0c\n\x04rnti\x18\x01 \x02(\r\"\xd7\x01\n\x0fue_capabilities\x12\x0c\n\x04\x62\x61nd\x18\x01 \x03(\r\x12\x14\n\x0crelease_3gpp\x18\x02 \x01(\r\x12\x18\n\x10interFreq_SI_acq\x18\x03 \x01(\x08\x12\x18\n\x10intraFreq_SI_acq\x18\x04 \x01(\x08\x12\x14\n\x0c\x41\x35_A4_events\x18\x05 \x01(\x08\x12\x16\n\x0einterFreq_meas\x18\x06 \x01(\x08\x12\x1e\n\x16intraFreq_ref_per_meas\x18\x07 \x01(\x08\x12\x1e\n\x16interFreq_ref_per_meas\x18\x08 \x01(\x08\"N\n\x10\x63\x65lls_to_measure\x12\x13\n\x0bphy_cell_id\x18\x01 \x01(\r\x12%\n\x0coffset_range\x18\x02 \x01(\x0e\x32\x0f.Q_offset_range\"?\n\x0f\x62lacklist_cells\x12\x11\n\tstart_pci\x18\x01 \x01(\r\x12\x19\n\x05range\x18\x02 \x01(\x0e\x32\n.pci_range\"\x90\x01\n\x0emeas_obj_EUTRA\x12\x14\n\x0c\x63\x61rrier_freq\x18\x01 \x01(\r\x12!\n\x07meas_bw\x18\x02 \x01(\x0e\x32\x10.allowed_meas_bw\x12 \n\x05\x63\x65lls\x18\x03 \x03(\x0b\x32\x11.cells_to_measure\x12#\n\tbkl_cells\x18\x04 \x03(\x0b\x32\x10.blacklist_cells\"Y\n\x0bmeas_object\x12\x14\n\tmeasObjId\x18\x01 \x02(\x05:\x01\x30\x12(\n\rmeasObj_EUTRA\x18\x02 \x01(\x0b\x32\x0f.meas_obj_EUTRAH\x00\x42\n\n\x08meas_obj\"6\n\x0crep_conf_per\x12&\n\x07purpose\x18\x01 \x01(\x0e\x32\x15.periodic_rep_purpose\">\n\x0fthreshold_EUTRA\x12\x0e\n\x04RSRP\x18\x01 \x01(\x05H\x00\x12\x0e\n\x04RSRQ\x18\x02 \x01(\x05H\x00\x42\x0b\n\tthreshold\"5\n\x0brep_conf_a1\x12&\n\x0c\x61\x31_threshold\x18\x01 \x01(\x0b\x32\x10.threshold_EUTRA\"5\n\x0brep_conf_a2\x12&\n\x0c\x61\x32_threshold\x18\x01 \x01(\x0b\x32\x10.threshold_EUTRA\"9\n\x0brep_conf_a3\x12\x11\n\ta3_offset\x18\x01 \x01(\x05\x12\x17\n\x0freport_on_leave\x18\x02 \x01(\r\"5\n\x0brep_conf_a4\x12&\n\x0c\x61\x34_threshold\x18\x01 \x01(\x0b\x32\x10.threshold_EUTRA\"_\n\x0brep_conf_a5\x12\'\n\ra5_threshold1\x18\x01 \x01(\x0b\x32\x10.threshold_EUTRA\x12\'\n\ra5_threshold2\x18\x02 \x01(\x0b\x32\x10.threshold_EUTRA\"\xf1\x03\n\x0erep_conf_EUTRA\x12#\n\nperiodical\x18\x01 \x01(\x0b\x32\r.rep_conf_perH\x00\x12\x1a\n\x02\x61\x31\x18\x02 \x01(\x0b\x32\x0c.rep_conf_a1H\x00\x12\x1a\n\x02\x61\x32\x18\x03 \x01(\x0b\x32\x0c.rep_conf_a2H\x00\x12\x1a\n\x02\x61\x33\x18\x04 \x01(\x0b\x32\x0c.rep_conf_a3H\x00\x12\x1a\n\x02\x61\x34\x18\x05 \x01(\x0b\x32\x0c.rep_conf_a4H\x00\x12\x1a\n\x02\x61\x35\x18\x06 \x01(\x0b\x32\x0c.rep_conf_a5H\x00\x12\x12\n\nhysteresis\x18\x07 \x01(\x05\x12$\n\ntrigg_time\x18\x08 \x01(\x0e\x32\x10.time_to_trigger\x12&\n\x0btrigg_quant\x18\t \x01(\x0e\x32\x11.trigger_quantity\x12&\n\x0creport_quant\x18\n \x01(\x0e\x32\x10.report_quantity\x12\x15\n\rmax_rep_cells\x18\x0b \x01(\r\x12&\n\x0crep_interval\x18\x0c \x01(\x0e\x32\x10.report_interval\x12\"\n\nrep_amount\x18\r \x01(\x0e\x32\x0e.report_amount\x12\x33\n\x11ue_rxtx_time_diff\x18\x0e \x01(\x0e\x32\x18.ue_rxtx_time_differenceB\x0c\n\nconf_EUTRA\"Y\n\rreport_config\x12\x17\n\x0creportConfId\x18\x01 \x02(\x05:\x01\x30\x12#\n\x08rc_EUTRA\x18\x02 \x01(\x0b\x32\x0f.rep_conf_EUTRAH\x00\x42\n\n\x08rep_conf\"I\n\x0fmeas_identifier\x12\n\n\x02id\x18\x01 \x02(\x05\x12\x12\n\nmeasObj_id\x18\x02 \x02(\x05\x12\x16\n\x0ereport_conf_id\x18\x03 \x02(\x05\"\xe8\x02\n\x15ue_rrc_meas_conf_repl\x12\x0c\n\x04rnti\x18\x01 \x02(\r\x12 \n\x06status\x18\x02 \x02(\x0e\x32\x10.conf_req_status\x12 \n\x0cue_rrc_state\x18\x03 \x01(\x0e\x32\n.rrc_state\x12(\n\rmeas_gap_patt\x18\x04 \x01(\x0e\x32\x11.meas_gap_pattern\x12!\n\x19meas_gap_config_sf_offset\x18\x05 \x01(\r\x12&\n\x0c\x63\x61pabilities\x18\x06 \x01(\x0b\x32\x10.ue_capabilities\x12\x1b\n\x05m_obj\x18\x07 \x03(\x0b\x32\x0c.meas_object\x12\x1e\n\x06r_conf\x18\x08 \x03(\x0b\x32\x0e.report_config\x12!\n\x07meas_id\x18\t \x03(\x0b\x32\x10.meas_identifier\x12\x0c\n\x04\x66req\x18\n \x01(\x02\x12\x1a\n\x08pcell_DD\x18\x0b \x01(\x0e\x32\x08.DD_mode\"v\n\x10ue_rrc_meas_conf\x12$\n\x03req\x18\x01 \x01(\x0b\x32\x15.ue_rrc_meas_conf_reqH\x00\x12&\n\x04repl\x18\x02 \x01(\x0b\x32\x16.ue_rrc_meas_conf_replH\x00\x42\x14\n\x12ue_rrc_meas_conf_m\"\x1b\n\nues_id_req\x12\r\n\x05\x64ummy\x18\x01 \x01(\x05\"8\n\tactive_ue\x12\x0c\n\x04rnti\x18\x01 \x02(\r\x12\x0c\n\x04imsi\x18\x02 \x01(\t\x12\x0f\n\x07plmn_id\x18\x03 \x02(\t\":\n\x0binactive_ue\x12\x0c\n\x04rnti\x18\x01 \x02(\r\x12\x0c\n\x04imsi\x18\x02 \x01(\t\x12\x0f\n\x07plmn_id\x18\x03 \x02(\t\"w\n\x0bues_id_repl\x12 \n\x06status\x18\x01 \x02(\x0e\x32\x10.conf_req_status\x12 \n\x0c\x61\x63tive_ue_id\x18\x02 \x03(\x0b\x32\n.active_ue\x12$\n\x0einactive_ue_id\x18\x03 \x03(\x0b\x32\x0c.inactive_ue\"N\n\x06ues_id\x12\x1a\n\x03req\x18\x01 \x01(\x0b\x32\x0b.ues_id_reqH\x00\x12\x1c\n\x04repl\x18\x02 \x01(\x0b\x32\x0c.ues_id_replH\x00\x42\n\n\x08ues_id_m\"\'\n\reNB_cells_req\x12\x16\n\x0e\x65nb_info_types\x18\x01 \x02(\r\"\xa6\x01\n\x10\x63\x65ll_information\x12\x14\n\x0cphys_cell_id\x18\x01 \x02(\r\x12\x14\n\x0c\x63\x61rrier_freq\x18\x02 \x02(\r\x12\x12\n\nnum_rbs_dl\x18\x03 \x01(\r\x12\x12\n\nnum_rbs_ul\x18\x04 \x01(\r\x12\x1e\n\x16res_alloc_type_supp_dl\x18\x05 \x03(\r\x12\x1e\n\x16res_alloc_type_supp_ul\x18\x06 \x03(\r\"\xa0\x01\n\x10ran_sharing_info\x12,\n\x0crbs_alloc_dl\x18\x01 \x03(\x0b\x32\x16.rbs_alloc_every_frame\x12,\n\x0crbs_alloc_ul\x18\x02 \x03(\x0b\x32\x16.rbs_alloc_every_frame\x12\x19\n\x11tenant_schedulers\x18\x03 \x03(\t\x12\x15\n\rue_schedulers\x18\x04 \x03(\t\"y\n\x0e\x65NB_cells_repl\x12 \n\x06status\x18\x01 \x02(\x0e\x32\x10.conf_req_status\x12 \n\x05\x63\x65lls\x18\x02 \x03(\x0b\x32\x11.cell_information\x12#\n\x08ran_sh_i\x18\x03 \x01(\x0b\x32\x11.ran_sharing_info\"Z\n\teNB_cells\x12\x1d\n\x03req\x18\x01 \x01(\x0b\x32\x0e.eNB_cells_reqH\x00\x12\x1f\n\x04repl\x18\x02 \x01(\x0b\x32\x0f.eNB_cells_replH\x00\x42\r\n\x0b\x65NB_cells_m*9\n\x10meas_gap_pattern\x12\x0b\n\x07MGP_GP0\x10\x00\x12\x0b\n\x07MGP_GP1\x10\x01\x12\x0b\n\x07MGP_OFF\x10\x02*\x91\x01\n\trrc_state\x12\x13\n\x0fRS_RRC_INACTIVE\x10\x00\x12\x0f\n\x0bRS_RRC_IDLE\x10\x01\x12\x16\n\x12RS_RRC_SI_RECEIVED\x10\x02\x12\x14\n\x10RS_RRC_CONNECTED\x10\x03\x12\x17\n\x13RS_RRC_RECONFIGURED\x10\x04\x12\x17\n\x13RS_RRC_HO_EXECUTION\x10\x05*_\n\x0f\x61llowed_meas_bw\x12\n\n\x06\x41MBW_6\x10\x00\x12\x0b\n\x07\x41MBW_15\x10\x01\x12\x0b\n\x07\x41MBW_25\x10\x02\x12\x0b\n\x07\x41MBW_50\x10\x03\x12\x0b\n\x07\x41MBW_75\x10\x04\x12\x0c\n\x08\x41MBW_100\x10\x05*\xc2\x03\n\x0eQ_offset_range\x12\r\n\tQOR_dB_24\x10\x00\x12\r\n\tQOR_dB_22\x10\x01\x12\r\n\tQOR_dB_20\x10\x02\x12\r\n\tQOR_dB_18\x10\x03\x12\r\n\tQOR_dB_16\x10\x04\x12\r\n\tQOR_dB_14\x10\x05\x12\r\n\tQOR_dB_12\x10\x06\x12\r\n\tQOR_dB_10\x10\x07\x12\x0c\n\x08QOR_dB_8\x10\x08\x12\x0c\n\x08QOR_dB_6\x10\t\x12\x0c\n\x08QOR_dB_5\x10\n\x12\x0c\n\x08QOR_dB_4\x10\x0b\x12\x0c\n\x08QOR_dB_3\x10\x0c\x12\x0c\n\x08QOR_dB_2\x10\r\x12\x0c\n\x08QOR_dB_1\x10\x0e\x12\x0b\n\x07QOR_dB0\x10\x0f\x12\x0b\n\x07QOR_1dB\x10\x10\x12\x0b\n\x07QOR_2dB\x10\x11\x12\x0b\n\x07QOR_3dB\x10\x12\x12\x0b\n\x07QOR_4dB\x10\x13\x12\x0b\n\x07QOR_5dB\x10\x14\x12\x0b\n\x07QOR_6dB\x10\x15\x12\x0b\n\x07QOR_8dB\x10\x16\x12\x0c\n\x08QOR_10dB\x10\x17\x12\x0c\n\x08QOR_12dB\x10\x18\x12\x0c\n\x08QOR_14dB\x10\x19\x12\x0c\n\x08QOR_16dB\x10\x1a\x12\x0c\n\x08QOR_18dB\x10\x1b\x12\x0c\n\x08QOR_20dB\x10\x1c\x12\x0c\n\x08QOR_22dB\x10\x1d\x12\x0c\n\x08QOR_24dB\x10\x1e*\xf3\x01\n\tpci_range\x12\x0b\n\x07PCIR_n4\x10\x00\x12\x0b\n\x07PCIR_n8\x10\x01\x12\x0c\n\x08PCIR_n12\x10\x02\x12\x0c\n\x08PCIR_n16\x10\x03\x12\x0c\n\x08PCIR_n24\x10\x04\x12\x0c\n\x08PCIR_n32\x10\x05\x12\x0c\n\x08PCIR_n48\x10\x06\x12\x0c\n\x08PCIR_n64\x10\x07\x12\x0c\n\x08PCIR_n84\x10\x08\x12\x0c\n\x08PCIR_n96\x10\t\x12\r\n\tPCIR_n128\x10\n\x12\r\n\tPCIR_n168\x10\x0b\x12\r\n\tPCIR_n252\x10\x0c\x12\r\n\tPCIR_n504\x10\r\x12\x0f\n\x0bPCIR_spare2\x10\x0e\x12\x0f\n\x0bPCIR_spare1\x10\x0f*\xa0\x02\n\x0ftime_to_trigger\x12\r\n\tTTRIG_ms0\x10\x00\x12\x0e\n\nTTRIG_ms40\x10\x01\x12\x0e\n\nTTRIG_ms64\x10\x02\x12\x0e\n\nTTRIG_ms80\x10\x03\x12\x0f\n\x0bTTRIG_ms100\x10\x04\x12\x0f\n\x0bTTRIG_ms128\x10\x05\x12\x0f\n\x0bTTRIG_ms160\x10\x06\x12\x0f\n\x0bTTRIG_ms256\x10\x07\x12\x0f\n\x0bTTRIG_ms320\x10\x08\x12\x0f\n\x0bTTRIG_ms480\x10\t\x12\x0f\n\x0bTTRIG_ms512\x10\n\x12\x0f\n\x0bTTRIG_ms640\x10\x0b\x12\x10\n\x0cTTRIG_ms1024\x10\x0c\x12\x10\n\x0cTTRIG_ms1280\x10\r\x12\x10\n\x0cTTRIG_ms2560\x10\x0e\x12\x10\n\x0cTTRIG_ms5120\x10\x0f*S\n\x14periodic_rep_purpose\x12 \n\x1cPERRP_REPORT_STRONGEST_CELLS\x10\x00\x12\x19\n\x15PERRP_REPORT_CGI_INFO\x10\x01*2\n\x10trigger_quantity\x12\x0e\n\nTRIGQ_RSRP\x10\x00\x12\x0e\n\nTRIGQ_RSRQ\x10\x01*@\n\x0freport_quantity\x12\x1e\n\x1aREPQ_SAME_AS_TRIGGER_QUANT\x10\x00\x12\r\n\tREPQ_BOTH\x10\x01*\xb7\x02\n\x0freport_interval\x12\x10\n\x0cREPINT_ms120\x10\x00\x12\x10\n\x0cREPINT_ms240\x10\x01\x12\x10\n\x0cREPINT_ms480\x10\x02\x12\x10\n\x0cREPINT_ms640\x10\x03\x12\x11\n\rREPINT_ms1024\x10\x04\x12\x11\n\rREPINT_ms2048\x10\x05\x12\x11\n\rREPINT_ms5120\x10\x06\x12\x12\n\x0eREPINT_ms10240\x10\x07\x12\x0f\n\x0bREPINT_min1\x10\x08\x12\x0f\n\x0bREPINT_min6\x10\t\x12\x10\n\x0cREPINT_min12\x10\n\x12\x10\n\x0cREPINT_min30\x10\x0b\x12\x10\n\x0cREPINT_min60\x10\x0c\x12\x11\n\rREPINT_spare3\x10\r\x12\x11\n\rREPINT_spare2\x10\x0e\x12\x11\n\rREPINT_spare1\x10\x0f*\x89\x01\n\rreport_amount\x12\x0c\n\x08REPAMT_1\x10\x00\x12\x0c\n\x08REPAMT_2\x10\x01\x12\x0c\n\x08REPAMT_4\x10\x02\x12\x0c\n\x08REPAMT_8\x10\x03\x12\r\n\tREPAMT_16\x10\x04\x12\r\n\tREPAMT_32\x10\x05\x12\r\n\tREPAMT_64\x10\x06\x12\x13\n\x0fREPAMT_infinity\x10\x07*-\n\x17ue_rxtx_time_difference\x12\x12\n\x0eUERXTXTD_SETUP\x10\x00*#\n\x07\x44\x44_mode\x12\x0b\n\x07\x44\x44M_FDD\x10\x00\x12\x0b\n\x07\x44\x44M_TDD\x10\x01*7\n\x0f\x63onf_req_status\x12\x11\n\rCREQS_SUCCESS\x10\x00\x12\x11\n\rCREQS_FAILURE\x10\x01*D\n\x14\x65NB_cells_info_types\x12\x12\n\x0e\x45NB_CELLS_INFO\x10\x01\x12\x18\n\x14\x45NB_RAN_SHARING_INFO\x10\x02')
+  ,
+  dependencies=[ran__sharing__pb2.DESCRIPTOR,])
 _sym_db.RegisterFileDescriptor(DESCRIPTOR)
 
 _MEAS_GAP_PATTERN = _descriptor.EnumDescriptor(
@@ -45,8 +47,8 @@ _MEAS_GAP_PATTERN = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   options=None,
-  serialized_start=2843,
-  serialized_end=2900,
+  serialized_start=3201,
+  serialized_end=3258,
 )
 _sym_db.RegisterEnumDescriptor(_MEAS_GAP_PATTERN)
 
@@ -84,8 +86,8 @@ _RRC_STATE = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   options=None,
-  serialized_start=2903,
-  serialized_end=3048,
+  serialized_start=3261,
+  serialized_end=3406,
 )
 _sym_db.RegisterEnumDescriptor(_RRC_STATE)
 
@@ -123,8 +125,8 @@ _ALLOWED_MEAS_BW = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   options=None,
-  serialized_start=3050,
-  serialized_end=3145,
+  serialized_start=3408,
+  serialized_end=3503,
 )
 _sym_db.RegisterEnumDescriptor(_ALLOWED_MEAS_BW)
 
@@ -262,8 +264,8 @@ _Q_OFFSET_RANGE = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   options=None,
-  serialized_start=3148,
-  serialized_end=3598,
+  serialized_start=3506,
+  serialized_end=3956,
 )
 _sym_db.RegisterEnumDescriptor(_Q_OFFSET_RANGE)
 
@@ -341,8 +343,8 @@ _PCI_RANGE = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   options=None,
-  serialized_start=3601,
-  serialized_end=3844,
+  serialized_start=3959,
+  serialized_end=4202,
 )
 _sym_db.RegisterEnumDescriptor(_PCI_RANGE)
 
@@ -420,8 +422,8 @@ _TIME_TO_TRIGGER = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   options=None,
-  serialized_start=3847,
-  serialized_end=4135,
+  serialized_start=4205,
+  serialized_end=4493,
 )
 _sym_db.RegisterEnumDescriptor(_TIME_TO_TRIGGER)
 
@@ -443,8 +445,8 @@ _PERIODIC_REP_PURPOSE = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   options=None,
-  serialized_start=4137,
-  serialized_end=4220,
+  serialized_start=4495,
+  serialized_end=4578,
 )
 _sym_db.RegisterEnumDescriptor(_PERIODIC_REP_PURPOSE)
 
@@ -466,8 +468,8 @@ _TRIGGER_QUANTITY = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   options=None,
-  serialized_start=4222,
-  serialized_end=4272,
+  serialized_start=4580,
+  serialized_end=4630,
 )
 _sym_db.RegisterEnumDescriptor(_TRIGGER_QUANTITY)
 
@@ -489,8 +491,8 @@ _REPORT_QUANTITY = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   options=None,
-  serialized_start=4274,
-  serialized_end=4338,
+  serialized_start=4632,
+  serialized_end=4696,
 )
 _sym_db.RegisterEnumDescriptor(_REPORT_QUANTITY)
 
@@ -568,8 +570,8 @@ _REPORT_INTERVAL = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   options=None,
-  serialized_start=4341,
-  serialized_end=4652,
+  serialized_start=4699,
+  serialized_end=5010,
 )
 _sym_db.RegisterEnumDescriptor(_REPORT_INTERVAL)
 
@@ -615,8 +617,8 @@ _REPORT_AMOUNT = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   options=None,
-  serialized_start=4655,
-  serialized_end=4792,
+  serialized_start=5013,
+  serialized_end=5150,
 )
 _sym_db.RegisterEnumDescriptor(_REPORT_AMOUNT)
 
@@ -634,8 +636,8 @@ _UE_RXTX_TIME_DIFFERENCE = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   options=None,
-  serialized_start=4794,
-  serialized_end=4839,
+  serialized_start=5152,
+  serialized_end=5197,
 )
 _sym_db.RegisterEnumDescriptor(_UE_RXTX_TIME_DIFFERENCE)
 
@@ -657,8 +659,8 @@ _DD_MODE = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   options=None,
-  serialized_start=4841,
-  serialized_end=4876,
+  serialized_start=5199,
+  serialized_end=5234,
 )
 _sym_db.RegisterEnumDescriptor(_DD_MODE)
 
@@ -680,8 +682,8 @@ _CONF_REQ_STATUS = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   options=None,
-  serialized_start=4878,
-  serialized_end=4933,
+  serialized_start=5236,
+  serialized_end=5291,
 )
 _sym_db.RegisterEnumDescriptor(_CONF_REQ_STATUS)
 
@@ -696,11 +698,15 @@ _ENB_CELLS_INFO_TYPES = _descriptor.EnumDescriptor(
       name='ENB_CELLS_INFO', index=0, number=1,
       options=None,
       type=None),
+    _descriptor.EnumValueDescriptor(
+      name='ENB_RAN_SHARING_INFO', index=1, number=2,
+      options=None,
+      type=None),
   ],
   containing_type=None,
   options=None,
-  serialized_start=4935,
-  serialized_end=4977,
+  serialized_start=5293,
+  serialized_end=5361,
 )
 _sym_db.RegisterEnumDescriptor(_ENB_CELLS_INFO_TYPES)
 
@@ -819,6 +825,7 @@ DDM_TDD = 1
 CREQS_SUCCESS = 0
 CREQS_FAILURE = 1
 ENB_CELLS_INFO = 1
+ENB_RAN_SHARING_INFO = 2
 
 
 
@@ -848,8 +855,8 @@ _UE_RRC_MEAS_CONF_REQ = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=17,
-  serialized_end=53,
+  serialized_start=36,
+  serialized_end=72,
 )
 
 
@@ -928,8 +935,8 @@ _UE_CAPABILITIES = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=56,
-  serialized_end=271,
+  serialized_start=75,
+  serialized_end=290,
 )
 
 
@@ -966,8 +973,8 @@ _CELLS_TO_MEASURE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=273,
-  serialized_end=351,
+  serialized_start=292,
+  serialized_end=370,
 )
 
 
@@ -1004,8 +1011,8 @@ _BLACKLIST_CELLS = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=353,
-  serialized_end=416,
+  serialized_start=372,
+  serialized_end=435,
 )
 
 
@@ -1056,8 +1063,8 @@ _MEAS_OBJ_EUTRA = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=419,
-  serialized_end=563,
+  serialized_start=438,
+  serialized_end=582,
 )
 
 
@@ -1097,8 +1104,8 @@ _MEAS_OBJECT = _descriptor.Descriptor(
       name='meas_obj', full_name='meas_object.meas_obj',
       index=0, containing_type=None, fields=[]),
   ],
-  serialized_start=565,
-  serialized_end=654,
+  serialized_start=584,
+  serialized_end=673,
 )
 
 
@@ -1128,8 +1135,8 @@ _REP_CONF_PER = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=656,
-  serialized_end=710,
+  serialized_start=675,
+  serialized_end=729,
 )
 
 
@@ -1169,8 +1176,8 @@ _THRESHOLD_EUTRA = _descriptor.Descriptor(
       name='threshold', full_name='threshold_EUTRA.threshold',
       index=0, containing_type=None, fields=[]),
   ],
-  serialized_start=712,
-  serialized_end=774,
+  serialized_start=731,
+  serialized_end=793,
 )
 
 
@@ -1200,8 +1207,8 @@ _REP_CONF_A1 = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=776,
-  serialized_end=829,
+  serialized_start=795,
+  serialized_end=848,
 )
 
 
@@ -1231,8 +1238,8 @@ _REP_CONF_A2 = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=831,
-  serialized_end=884,
+  serialized_start=850,
+  serialized_end=903,
 )
 
 
@@ -1269,8 +1276,8 @@ _REP_CONF_A3 = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=886,
-  serialized_end=943,
+  serialized_start=905,
+  serialized_end=962,
 )
 
 
@@ -1300,8 +1307,8 @@ _REP_CONF_A4 = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=945,
-  serialized_end=998,
+  serialized_start=964,
+  serialized_end=1017,
 )
 
 
@@ -1338,8 +1345,8 @@ _REP_CONF_A5 = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1000,
-  serialized_end=1095,
+  serialized_start=1019,
+  serialized_end=1114,
 )
 
 
@@ -1463,8 +1470,8 @@ _REP_CONF_EUTRA = _descriptor.Descriptor(
       name='conf_EUTRA', full_name='rep_conf_EUTRA.conf_EUTRA',
       index=0, containing_type=None, fields=[]),
   ],
-  serialized_start=1098,
-  serialized_end=1595,
+  serialized_start=1117,
+  serialized_end=1614,
 )
 
 
@@ -1504,8 +1511,8 @@ _REPORT_CONFIG = _descriptor.Descriptor(
       name='rep_conf', full_name='report_config.rep_conf',
       index=0, containing_type=None, fields=[]),
   ],
-  serialized_start=1597,
-  serialized_end=1686,
+  serialized_start=1616,
+  serialized_end=1705,
 )
 
 
@@ -1549,8 +1556,8 @@ _MEAS_IDENTIFIER = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1688,
-  serialized_end=1761,
+  serialized_start=1707,
+  serialized_end=1780,
 )
 
 
@@ -1650,8 +1657,8 @@ _UE_RRC_MEAS_CONF_REPL = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1764,
-  serialized_end=2124,
+  serialized_start=1783,
+  serialized_end=2143,
 )
 
 
@@ -1691,8 +1698,8 @@ _UE_RRC_MEAS_CONF = _descriptor.Descriptor(
       name='ue_rrc_meas_conf_m', full_name='ue_rrc_meas_conf.ue_rrc_meas_conf_m',
       index=0, containing_type=None, fields=[]),
   ],
-  serialized_start=2126,
-  serialized_end=2244,
+  serialized_start=2145,
+  serialized_end=2263,
 )
 
 
@@ -1722,8 +1729,8 @@ _UES_ID_REQ = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=2246,
-  serialized_end=2273,
+  serialized_start=2265,
+  serialized_end=2292,
 )
 
 
@@ -1743,15 +1750,15 @@ _ACTIVE_UE = _descriptor.Descriptor(
       options=None),
     _descriptor.FieldDescriptor(
       name='imsi', full_name='active_ue.imsi', index=1,
-      number=2, type=4, cpp_type=4, label=1,
-      has_default_value=False, default_value=0,
+      number=2, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=_b("").decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
       name='plmn_id', full_name='active_ue.plmn_id', index=2,
-      number=3, type=13, cpp_type=3, label=2,
-      has_default_value=False, default_value=0,
+      number=3, type=9, cpp_type=9, label=2,
+      has_default_value=False, default_value=_b("").decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
@@ -1767,8 +1774,8 @@ _ACTIVE_UE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=2275,
-  serialized_end=2331,
+  serialized_start=2294,
+  serialized_end=2350,
 )
 
 
@@ -1788,15 +1795,15 @@ _INACTIVE_UE = _descriptor.Descriptor(
       options=None),
     _descriptor.FieldDescriptor(
       name='imsi', full_name='inactive_ue.imsi', index=1,
-      number=2, type=4, cpp_type=4, label=1,
-      has_default_value=False, default_value=0,
+      number=2, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=_b("").decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
       name='plmn_id', full_name='inactive_ue.plmn_id', index=2,
-      number=3, type=13, cpp_type=3, label=2,
-      has_default_value=False, default_value=0,
+      number=3, type=9, cpp_type=9, label=2,
+      has_default_value=False, default_value=_b("").decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
@@ -1812,8 +1819,8 @@ _INACTIVE_UE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=2333,
-  serialized_end=2391,
+  serialized_start=2352,
+  serialized_end=2410,
 )
 
 
@@ -1857,8 +1864,8 @@ _UES_ID_REPL = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=2393,
-  serialized_end=2512,
+  serialized_start=2412,
+  serialized_end=2531,
 )
 
 
@@ -1898,8 +1905,8 @@ _UES_ID = _descriptor.Descriptor(
       name='ues_id_m', full_name='ues_id.ues_id_m',
       index=0, containing_type=None, fields=[]),
   ],
-  serialized_start=2514,
-  serialized_end=2592,
+  serialized_start=2533,
+  serialized_end=2611,
 )
 
 
@@ -1929,8 +1936,8 @@ _ENB_CELLS_REQ = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=2594,
-  serialized_end=2633,
+  serialized_start=2613,
+  serialized_end=2652,
 )
 
 
@@ -1955,33 +1962,30 @@ _CELL_INFORMATION = _descriptor.Descriptor(
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
-  ],
-  extensions=[
-  ],
-  nested_types=[],
-  enum_types=[
-  ],
-  options=None,
-  is_extendable=False,
-  syntax='proto2',
-  extension_ranges=[],
-  oneofs=[
-  ],
-  serialized_start=2635,
-  serialized_end=2697,
-)
-
-
-_ENB_CELLS_REPL = _descriptor.Descriptor(
-  name='eNB_cells_repl',
-  full_name='eNB_cells_repl',
-  filename=None,
-  file=DESCRIPTOR,
-  containing_type=None,
-  fields=[
     _descriptor.FieldDescriptor(
-      name='cells', full_name='eNB_cells_repl.cells', index=0,
-      number=1, type=11, cpp_type=10, label=3,
+      name='num_rbs_dl', full_name='cell_information.num_rbs_dl', index=2,
+      number=3, type=13, cpp_type=3, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+    _descriptor.FieldDescriptor(
+      name='num_rbs_ul', full_name='cell_information.num_rbs_ul', index=3,
+      number=4, type=13, cpp_type=3, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+    _descriptor.FieldDescriptor(
+      name='res_alloc_type_supp_dl', full_name='cell_information.res_alloc_type_supp_dl', index=4,
+      number=5, type=13, cpp_type=3, label=3,
+      has_default_value=False, default_value=[],
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+    _descriptor.FieldDescriptor(
+      name='res_alloc_type_supp_ul', full_name='cell_information.res_alloc_type_supp_ul', index=5,
+      number=6, type=13, cpp_type=3, label=3,
       has_default_value=False, default_value=[],
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
@@ -1998,8 +2002,105 @@ _ENB_CELLS_REPL = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=2699,
-  serialized_end=2749,
+  serialized_start=2655,
+  serialized_end=2821,
+)
+
+
+_RAN_SHARING_INFO = _descriptor.Descriptor(
+  name='ran_sharing_info',
+  full_name='ran_sharing_info',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='rbs_alloc_dl', full_name='ran_sharing_info.rbs_alloc_dl', index=0,
+      number=1, type=11, cpp_type=10, label=3,
+      has_default_value=False, default_value=[],
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+    _descriptor.FieldDescriptor(
+      name='rbs_alloc_ul', full_name='ran_sharing_info.rbs_alloc_ul', index=1,
+      number=2, type=11, cpp_type=10, label=3,
+      has_default_value=False, default_value=[],
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+    _descriptor.FieldDescriptor(
+      name='tenant_schedulers', full_name='ran_sharing_info.tenant_schedulers', index=2,
+      number=3, type=9, cpp_type=9, label=3,
+      has_default_value=False, default_value=[],
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+    _descriptor.FieldDescriptor(
+      name='ue_schedulers', full_name='ran_sharing_info.ue_schedulers', index=3,
+      number=4, type=9, cpp_type=9, label=3,
+      has_default_value=False, default_value=[],
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  options=None,
+  is_extendable=False,
+  syntax='proto2',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=2824,
+  serialized_end=2984,
+)
+
+
+_ENB_CELLS_REPL = _descriptor.Descriptor(
+  name='eNB_cells_repl',
+  full_name='eNB_cells_repl',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='status', full_name='eNB_cells_repl.status', index=0,
+      number=1, type=14, cpp_type=8, label=2,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+    _descriptor.FieldDescriptor(
+      name='cells', full_name='eNB_cells_repl.cells', index=1,
+      number=2, type=11, cpp_type=10, label=3,
+      has_default_value=False, default_value=[],
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+    _descriptor.FieldDescriptor(
+      name='ran_sh_i', full_name='eNB_cells_repl.ran_sh_i', index=2,
+      number=3, type=11, cpp_type=10, label=1,
+      has_default_value=False, default_value=None,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  options=None,
+  is_extendable=False,
+  syntax='proto2',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=2986,
+  serialized_end=3107,
 )
 
 
@@ -2039,8 +2140,8 @@ _ENB_CELLS = _descriptor.Descriptor(
       name='eNB_cells_m', full_name='eNB_cells.eNB_cells_m',
       index=0, containing_type=None, fields=[]),
   ],
-  serialized_start=2751,
-  serialized_end=2841,
+  serialized_start=3109,
+  serialized_end=3199,
 )
 
 _CELLS_TO_MEASURE.fields_by_name['offset_range'].enum_type = _Q_OFFSET_RANGE
@@ -2125,7 +2226,11 @@ _UES_ID.fields_by_name['req'].containing_oneof = _UES_ID.oneofs_by_name['ues_id_
 _UES_ID.oneofs_by_name['ues_id_m'].fields.append(
   _UES_ID.fields_by_name['repl'])
 _UES_ID.fields_by_name['repl'].containing_oneof = _UES_ID.oneofs_by_name['ues_id_m']
+_RAN_SHARING_INFO.fields_by_name['rbs_alloc_dl'].message_type = ran__sharing__pb2._RBS_ALLOC_EVERY_FRAME
+_RAN_SHARING_INFO.fields_by_name['rbs_alloc_ul'].message_type = ran__sharing__pb2._RBS_ALLOC_EVERY_FRAME
+_ENB_CELLS_REPL.fields_by_name['status'].enum_type = _CONF_REQ_STATUS
 _ENB_CELLS_REPL.fields_by_name['cells'].message_type = _CELL_INFORMATION
+_ENB_CELLS_REPL.fields_by_name['ran_sh_i'].message_type = _RAN_SHARING_INFO
 _ENB_CELLS.fields_by_name['req'].message_type = _ENB_CELLS_REQ
 _ENB_CELLS.fields_by_name['repl'].message_type = _ENB_CELLS_REPL
 _ENB_CELLS.oneofs_by_name['eNB_cells_m'].fields.append(
@@ -2159,6 +2264,7 @@ DESCRIPTOR.message_types_by_name['ues_id_repl'] = _UES_ID_REPL
 DESCRIPTOR.message_types_by_name['ues_id'] = _UES_ID
 DESCRIPTOR.message_types_by_name['eNB_cells_req'] = _ENB_CELLS_REQ
 DESCRIPTOR.message_types_by_name['cell_information'] = _CELL_INFORMATION
+DESCRIPTOR.message_types_by_name['ran_sharing_info'] = _RAN_SHARING_INFO
 DESCRIPTOR.message_types_by_name['eNB_cells_repl'] = _ENB_CELLS_REPL
 DESCRIPTOR.message_types_by_name['eNB_cells'] = _ENB_CELLS
 DESCRIPTOR.enum_types_by_name['meas_gap_pattern'] = _MEAS_GAP_PATTERN
@@ -2351,6 +2457,13 @@ cell_information = _reflection.GeneratedProtocolMessageType('cell_information', 
   # @@protoc_insertion_point(class_scope:cell_information)
   ))
 _sym_db.RegisterMessage(cell_information)
+
+ran_sharing_info = _reflection.GeneratedProtocolMessageType('ran_sharing_info', (_message.Message,), dict(
+  DESCRIPTOR = _RAN_SHARING_INFO,
+  __module__ = 'configs_pb2'
+  # @@protoc_insertion_point(class_scope:ran_sharing_info)
+  ))
+_sym_db.RegisterMessage(ran_sharing_info)
 
 eNB_cells_repl = _reflection.GeneratedProtocolMessageType('eNB_cells_repl', (_message.Message,), dict(
   DESCRIPTOR = _ENB_CELLS_REPL,
