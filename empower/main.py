@@ -308,6 +308,9 @@ def main(argv=None):
     else:
         raise RuntimeError()
 
+    # Disabling Logs of API calls for the GUI.
+    logging.getLogger('tornado.access').disabled = True
+
     # start tornado loop
     tornado.ioloop.IOLoop.instance().start()
 

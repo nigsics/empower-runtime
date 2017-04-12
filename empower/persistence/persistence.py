@@ -152,7 +152,7 @@ class TblPendingTenant(Base):
                        primary_key=True,
                        default=uuid.uuid4)
     plmn_id = Column("plmn_id",
-                     Integer,
+                     String,
                      default=True)
     tenant_name = Column(SSID, unique=True)
     desc = Column(String)
@@ -180,7 +180,7 @@ class TblTenant(Base):
                        primary_key=True,
                        default=uuid.uuid4)
     plmn_id = Column("plmn_id",
-                     Integer,
+                     String,
                      default=True)
     tenant_name = Column(SSID, unique=True)
     desc = Column(String)
@@ -274,7 +274,7 @@ class TblIMSI2MAC(Base):
     __tablename__ = 'imsi2mac'
 
     imsi = Column("imsi",
-                  Integer,
+                  String,
                   primary_key=True)
 
     addr = Column("addr",

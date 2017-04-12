@@ -238,6 +238,9 @@ class VBSPConnection(object):
             # request registered UEs
             self.send_UEs_id_req()
 
+            # request eNB cells information
+            self.send_eNB_cells_info_req()
+
             # generate register message
             self.send_register_message_to_self()
 
@@ -271,14 +274,14 @@ class VBSPConnection(object):
                 active_ues[(self.vbs.addr, ue["rnti"])] = {}
                 if "imsi" in ue:
                     active_ues[(self.vbs.addr, ue["rnti"])]["imsi"] = \
-                                                                int(ue["imsi"])
+                                                                ue["imsi"]
                 else:
-                    active_ues[(self.vbs.addr, ue["rnti"])]["imsi"] = None
+                    active_ues[(self.vbs.addr, ue["rnti"])]["imsi"] = ""
                 if "plmn_id" in ue:
                     active_ues[(self.vbs.addr, ue["rnti"])]["plmn_id"] = \
-                                                            int(ue["plmn_id"])
+                                                            ue["plmn_id"]
                 else:
-                    active_ues[(self.vbs.addr, ue["rnti"])]["plmn_id"] = None
+                    active_ues[(self.vbs.addr, ue["rnti"])]["plmn_id"] = ""
 
         # List of inactive UEs
         if "inactive_ue_id" in ues_id_msg_repl:
@@ -286,14 +289,14 @@ class VBSPConnection(object):
                 inactive_ues[(self.vbs.addr, ue["rnti"])] = {}
                 if "imsi" in ue:
                     inactive_ues[(self.vbs.addr, ue["rnti"])]["imsi"] = \
-                                                                int(ue["imsi"])
+                                                                ue["imsi"]
                 else:
-                    inactive_ues[(self.vbs.addr, ue["rnti"])]["imsi"] = None
+                    inactive_ues[(self.vbs.addr, ue["rnti"])]["imsi"] = ""
                 if "plmn_id" in ue:
                     inactive_ues[(self.vbs.addr, ue["rnti"])]["plmn_id"] = \
-                                                            int(ue["plmn_id"])
+                                                            ue["plmn_id"]
                 else:
-                    inactive_ues[(self.vbs.addr, ue["rnti"])]["plmn_id"] = None
+                    inactive_ues[(self.vbs.addr, ue["rnti"])]["plmn_id"] = ""
 
         for vbs_id, rnti in active_ues.keys():
 
@@ -311,7 +314,7 @@ class VBSPConnection(object):
             # Setting IMSI of UE
             ue.imsi = imsi
 
-            if not ue.plmn_id and plmn_id:
+            if ue.plmn_id == "" and plmn_id != "":
 
                 # Setting tenant
                 ue.tenant = RUNTIME.load_tenant_by_plmn_id(plmn_id)
@@ -338,7 +341,7 @@ class VBSPConnection(object):
                                       ue=ue.rnti,
                                       conf_req=conf_req)
 
-            if ue.plmn_id and not plmn_id:
+            if ue.plmn_id != "" and plmn_id == "":
 
                 # Raise UE leave
                 self.server.send_ue_leave_message_to_self(ue)
@@ -418,6 +421,29 @@ class VBSPConnection(object):
                  self.vbs.addr, enb_id)
 
         self.stream_send(ues_id_req)
+
+    def send_eNB_cells_info_req(self):
+        """ Send request for information about cells in eNB """
+
+        eNB_cells_req = main_pb2.emage_msg()
+
+        enb_id = ether_to_hex(self.vbs.addr)
+        # Transaction identifier is zero by default.
+        create_header(0, enb_id, eNB_cells_req.head)
+
+        # Creating a single event message to fetch cells information in eNB
+        se_msg = eNB_cells_req.se
+
+        eNB_cells_msg = se_msg.mENB_cells
+        eNB_cells_req_msg = eNB_cells_msg.req
+
+        eNB_cells_req_msg.enb_info_types = 0 | configs_pb2.ENB_CELLS_INFO
+        eNB_cells_req_msg.enb_info_types |= configs_pb2.ENB_RAN_SHARING_INFO
+
+        LOG.info("Sending eNB cells information request to VBS %s (%u)",
+                 self.vbs.addr, enb_id)
+
+        self.stream_send(eNB_cells_req)
 
     def send_rrc_meas_conf_req(self, ue):
         """ Sends a request for RRC measurements configuration of UE """

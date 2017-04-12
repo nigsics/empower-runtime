@@ -467,7 +467,7 @@ class EmpowerRuntime(object):
         return True
 
     def add_tenant(self, owner, desc, tenant_name, bssid_type,
-                   tenant_id=None, plmn_id=None):
+                   tenant_id=None, plmn_id=""):
 
         """Create new Tenant."""
 
@@ -529,7 +529,7 @@ class EmpowerRuntime(object):
             return Session().query(TblPendingTenant).all()
 
     def request_tenant(self, owner, desc, tenant_name, bssid_type,
-                       tenant_id=None, plmn_id=None):
+                       tenant_id=None, plmn_id=""):
 
         """Request new Tenant."""
 
@@ -712,7 +712,7 @@ class EmpowerRuntime(object):
 
             # removing UE from tenant, need first to look for right tenant
             if ue.addr in ue.tenant.ues:
-                LOG.info("Removing %s from tenant %u", ue.addr, ue.plmn_id)
+                LOG.info("Removing %s from tenant %s", ue.addr, ue.plmn_id)
                 del ue.tenant.ues[ue.addr]
 
         del self.ues[ue.addr]

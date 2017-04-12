@@ -55,7 +55,7 @@ class Tenant(object):
                'vbses']
 
     def __init__(self, tenant_id, tenant_name, owner, desc, bssid_type,
-                 plmn_id=None):
+                 plmn_id=""):
 
         self.tenant_id = tenant_id
         self.plmn_id = plmn_id

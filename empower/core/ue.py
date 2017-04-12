@@ -27,7 +27,7 @@ class UE(object):
 
         self.addr = ue_id
         self.rnti = rnti
-        self.imsi = None
+        self.imsi = ""
         self.vbs = vbs
         self.tenant = None
         self.rrc_state = None
@@ -41,7 +41,7 @@ class UE(object):
     def plmn_id(self):
         """Get the plmn_id."""
 
-        return self.tenant.plmn_id if self.tenant else None
+        return self.tenant.plmn_id if self.tenant else ""
 
     def to_dict(self):
         """ Return a JSON-serializable dictionary representing the UE """

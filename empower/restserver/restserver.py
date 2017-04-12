@@ -413,7 +413,7 @@ class IMSI2MACHandler(EmpowerAPIHandler):
                 raise ValueError("invalid imsi element")
 
             func = getattr(RUNTIME, 'add_imsi2mac')
-            func(int(request['imsi']), EtherAddress(request['addr']))
+            func(request['imsi'], EtherAddress(request['addr']))
 
             self.set_header("Location",
                             "/api/v1/imsi2mac/%s" % request['imsi'])
@@ -444,7 +444,7 @@ class IMSI2MACHandler(EmpowerAPIHandler):
                 raise ValueError("invalid imsi element")
 
             func = getattr(RUNTIME, 'remove_imsi2mac')
-            func(int(args[0]))
+            func(args[0])
         except KeyError as ex:
             self.send_error(404, message=ex)
         except ValueError as ex:
@@ -896,11 +896,11 @@ class PendingTenantHandler(EmpowerAPIHandler):
                 bssid_type = request['bssid_type']
 
             # If PLMN ID is not given, default it to 000000 value
-            plmn_id = 000000
+            plmn_id = ""
 
-            if "plmn_id" in request and request['plmn_id'] != None and \
+            if "plmn_id" in request and request['plmn_id'] != "" and \
                 (len(request['plmn_id']) == 5 or len(request['plmn_id']) == 6):
-                plmn_id = int(request['plmn_id'])
+                plmn_id = request['plmn_id']
 
             if len(args) == 1:
                 tenant_id = UUID(args[0])
@@ -1050,9 +1050,9 @@ class TenantHandler(EmpowerAPIHandler):
                 raise ValueError("invalid bssid_type %s" % bssid_type)
 
             # If PLMN ID is not given, default it to 000000 value
-            plmn_id = 000000
+            plmn_id = ""
 
-            if "plmn_id" in request and request['plmn_id'] != None:
+            if "plmn_id" in request and request['plmn_id'] != "":
                 plmn_id = request['plmn_id']
 
             if len(args) == 1:
