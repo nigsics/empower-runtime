@@ -18,7 +18,7 @@ function send_rrc_req() {
             "cell_to_measure": [],\
             "blacklist_cells": [],\
             "bandwidth": 50,\
-            "carrier_freq": 6400,\
+            "carrier_freq": 1850,\
             "report_type": "periodical_ref_signal",\
             "threshold1" : {\
                               "type": "RSRP",\

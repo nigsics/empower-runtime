@@ -66,22 +66,6 @@ class SignalGraph(EmpowerApp):
         # List of WTPs active
         self.wtps = []
 
-        # Populate existing VBSes
-        for vbs in self.tenant.vbses.values():
-            if vbs.connection:
-                self.vbses.append(vbs)
-
-        # Populate existing WTPs and trigger UCQM for existing WTPs
-        for wtp in self.tenant.wtps.values():
-            if wtp.connection:
-                self.wtps.append(wtp)
-
-                for block in wtp.supports:
-                    ucqm(block=block,
-                         tenant_id=self.tenant.tenant_id,
-                         every=5000,
-                         callback=self.ucqm_callback)
-
         # Generating inital coordinates for the graph nodes
         self.coord = self.get_coordinates()
 
@@ -216,6 +200,22 @@ class SignalGraph(EmpowerApp):
 
         tenant = RUNTIME.tenants[self.tenant.tenant_id]
 
+        # Populate existing VBSes
+        for vbs in self.tenant.vbses.values():
+            if vbs.connection and vbs not in self.vbses:
+                self.vbses.append(vbs)
+
+        # Populate existing WTPs and trigger UCQM for existing WTPs
+        for wtp in self.tenant.wtps.values():
+            if wtp.connection and wtp not in self.wtps:
+                self.wtps.append(wtp)
+
+                for block in wtp.supports:
+                    ucqm(block=block,
+                         tenant_id=self.tenant.tenant_id,
+                         every=5000,
+                         callback=self.ucqm_callback)
+
         for wtp in self.wtps:
             # Append the WTP's info
             graph_nodes['wtp' + wtp.addr.to_str()] =  \
@@ -246,7 +246,7 @@ class SignalGraph(EmpowerApp):
 
             mac = None
 
-            if ue.imsi and ue.imsi in RUNTIME.imsi2mac:
+            if ue.imsi != "" and ue.imsi in RUNTIME.imsi2mac:
                 mac = RUNTIME.imsi2mac[ue.imsi].to_str()
 
             # Append the UE's info
