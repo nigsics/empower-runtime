@@ -30,17 +30,17 @@ PRT_VBSP_AGENT_SCHEDULED_EVENT = "sche"
 PRT_VBSP_SINGLE_EVENT = "se"
 PRT_VBSP_HELLO = "mHello"
 PRT_VBSP_UES_ID = "mUEs_id"
-PRT_VBSP_RRC_MEAS_CONF = "mUE_rrc_meas_conf"
-PRT_VBSP_STATS = "mStats"
+PRT_UE_RRC_MEAS_CONF = "mUE_rrc_meas_conf"
+PRT_VBSP_CELLS_CONF = "mENB_cells"
 
 PRT_TYPES = {PRT_VBSP_BYE: None,
              PRT_VBSP_REGISTER: None,
              PRT_UE_JOIN: None,
              PRT_UE_LEAVE: None,
              PRT_VBSP_HELLO: "hello",
-             PRT_VBSP_UES_ID: "UEs_id_repl",
-             PRT_VBSP_RRC_MEAS_CONF: None,
-             PRT_VBSP_STATS: None}
+             PRT_VBSP_UES_ID: "ues_id_repl",
+             PRT_UE_RRC_MEAS_CONF: None,
+             PRT_VBSP_CELLS_CONF: "vbs_cells_conf_repl"}
 
 
 PRT_TYPES_HANDLERS = {PRT_VBSP_BYE: [],

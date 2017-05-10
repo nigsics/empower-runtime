@@ -15,7 +15,7 @@
 # specific language governing permissions and limitations
 # under the License.
 
-"""VBS RRC Stats Module."""
+"""UE RRC Measurement Configuration Module."""
 
 from protobuf_to_dict import protobuf_to_dict
 from empower.vbsp.messages import configs_pb2
@@ -25,7 +25,7 @@ from empower.datatypes.etheraddress import EtherAddress
 from empower.core.module import ModuleTrigger
 from empower.vbsp.vbspserver import ModuleVBSPWorker
 from empower.ue_confs import REQ_EVENT_TYPE
-from empower.vbsp import PRT_VBSP_RRC_MEAS_CONF
+from empower.vbsp import PRT_UE_RRC_MEAS_CONF
 from empower.vbsp.vbspconnection import create_header
 from empower.core.utils import ether_to_hex
 from empower.main import RUNTIME
@@ -148,9 +148,9 @@ class UERRCMeasConfs(ModuleTrigger):
         ue = tenant.ues[ue_addr]
 
         event_type = response.WhichOneof("event_types")
-        conf = reply[event_type]["mUE_rrc_meas_conf"]["repl"]
+        conf = reply[event_type][PRT_UE_RRC_MEAS_CONF]["repl"]
         self._conf_reply = \
-                self._conf_reply[event_type]["mUE_rrc_meas_conf"]["repl"]
+                self._conf_reply[event_type][PRT_UE_RRC_MEAS_CONF]["repl"]
 
         if conf["status"] != configs_pb2.CREQS_SUCCESS:
             return
@@ -341,4 +341,4 @@ setattr(EmpowerApp, UERRCMeasConfs.MODULE_NAME, bound_ue_rrc_meas_confs)
 def launch():
     """ Initialize the module. """
 
-    return UERRCMeasConfsWorker(UERRCMeasConfs, PRT_VBSP_RRC_MEAS_CONF)
+    return UERRCMeasConfsWorker(UERRCMeasConfs, PRT_UE_RRC_MEAS_CONF)
