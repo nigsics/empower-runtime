@@ -38,8 +38,24 @@ class VBS(BasePNFDev):
     ALIAS = "vbses"
     SOLO = "vbs"
 
+    def __init__(self, addr, label):
+        super().__init__(addr, label)
+
+        self.ran_sh_i = None
+        self.cells = None
+        self.cell_stats = None
+
     @property
     def enb_id(self):
         """Return tenant id."""
 
         return ether_to_hex(self.addr)
+
+    def to_dict(self):
+        """Return a JSON-serializable dictionary representing the VBS."""
+
+        out = super().to_dict()
+        out['cells'] = self.cells
+        out['ran_sh_i'] = self.ran_sh_i
+        out['cell_stats'] = self.cell_stats
+        return out
