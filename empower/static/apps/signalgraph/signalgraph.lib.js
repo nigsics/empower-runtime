@@ -7,7 +7,7 @@ function send_rrc_req() {
 
     if (selected_ue !== "" && sel_ue_text.indexOf("LTE") !== -1) {
 
-        var url = "/api/v1/tenants/" + tenant_id + "/vbs_rrc_stats";
+        var url = "/api/v1/tenants/" + tenant_id + "/ue_rrc_stats";
 
         var data = '{\
             "version": "1.0",\

@@ -67,7 +67,7 @@ class SimpleGraph(EmpowerApp):
     def ue_join_callback(self, ue):
         """Reconfigure RRC measurement on UE join."""
 
-        ue.vbs_rrc_stats(meas_req=MEAS_REQ, callback=self.rrc_stats_callback)
+        ue.ue_rrc_stats(meas_req=MEAS_REQ, callback=self.rrc_stats_callback)
 
     def rrc_stats_callback(self, meas_resp):
         """RRC measurement callback."""
