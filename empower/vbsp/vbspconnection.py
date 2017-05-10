@@ -52,11 +52,11 @@ def create_header(t_id, b_id, header):
         LOG.error("header parameter is None")
 
     header.vers = EMAGE_VERSION
-    # Set the transaction identifier (module id).
+    # Set the transaction identifier (module id)
     header.t_id = t_id
-    # Set the Base station identifier.
+    # Set the Base station identifier
     header.b_id = b_id
-    # Start the sequence number for messages from zero.
+    # Start the sequence number for messages from zero
     header.seq = 0
 
 
@@ -115,12 +115,12 @@ class VBSPConnection(object):
         self._wait()
 
     def to_dict(self):
-        """Return dict representation of object."""
+        """ Return dict representation of object """
 
         return self.addr
 
     def _heartbeat_cb(self):
-        """Check if connection is still active."""
+        """ Check if connection is still active """
 
         if self.vbs and not self.stream.closed():
             timeout = (self.vbs.period / 1000) * 3
@@ -129,7 +129,7 @@ class VBSPConnection(object):
                 self.stream.close()
 
     def stream_send(self, message):
-        """Send message."""
+        """ Send message """
 
         # Update the sequence number of the messages
         message.head.seq = self.seq + 1
@@ -206,7 +206,7 @@ class VBSPConnection(object):
                 handler(deserialized_msg)
 
     def _handle_hello(self, main_msg):
-        """Handle an incoming HELLO message.
+        """ Handle an incoming HELLO message
 
         Args:
             main_msg, a emage_msg containing HELLO message
@@ -236,10 +236,13 @@ class VBSPConnection(object):
             vbs.connection = self
 
             # request registered UEs
-            self.send_UEs_id_req()
+            self.send_ues_id_req()
 
-            # request eNB cells information
-            self.send_eNB_cells_info_req()
+            # request VBS Cells configuration information
+            self.send_vbs_cells_conf_req()
+
+            # request VBS for RAN sharing information
+            self.send_vbs_ran_sh_conf_req()
 
             # generate register message
             self.send_register_message_to_self()
@@ -249,8 +252,8 @@ class VBSPConnection(object):
         vbs.last_seen = main_msg.head.seq
         vbs.last_seen_ts = time.time()
 
-    def _handle_UEs_id_repl(self, main_msg):
-        """Handle an incoming UEs ID reply.
+    def _handle_ues_id_repl(self, main_msg):
+        """ Handle an incoming UEs ID reply
 
         Args:
             message, a emage_msg containing UE IDs (RNTIs)
@@ -329,7 +332,7 @@ class VBSPConnection(object):
                     # Raise UE join
                     self.server.send_ue_join_message_to_self(ue)
 
-                    # Create a trigger for reporting RRC measurements config.
+                    # Create a trigger for reporting RRC measurements config
                     from empower.ue_confs.ue_rrc_meas_confs import ue_rrc_meas_confs
 
                     conf_req = {
@@ -362,7 +365,7 @@ class VBSPConnection(object):
                 RUNTIME.remove_ue(ue_addr)
 
     def _handle_rrc_meas_conf_repl(self, main_msg):
-        """Handle an incoming UE's RRC Measurements configuration reply.
+        """ Handle an incoming UE's RRC Measurements configuration reply
 
         Args:
             message, a message containing RRC Measurements configuration in UE
@@ -372,7 +375,7 @@ class VBSPConnection(object):
 
         event_type = main_msg.WhichOneof("event_types")
         msg = protobuf_to_dict(main_msg)
-        rrc_m_conf_repl = msg[event_type]["mUE_rrc_meas_conf"]["repl"]
+        rrc_m_conf_repl = msg[event_type][PRT_UE_RRC_MEAS_CONF]["repl"]
 
         rnti = rrc_m_conf_repl["rnti"]
 
@@ -399,13 +402,53 @@ class VBSPConnection(object):
 
         ue.rrc_meas_config = rrc_m_conf_repl
 
-    def send_UEs_id_req(self):
+    def _handle_vbs_cells_conf_repl(self, main_msg):
+        """ Handle an incoming VBS cells configuration reply
+
+        Args:
+            message, a message containing VBS cells configuration requested
+        Returns:
+            None
+        """
+
+        event_type = main_msg.WhichOneof("event_types")
+        msg = protobuf_to_dict(main_msg)
+        conf_repl = msg[event_type]["mENB_cells"]["repl"]
+
+        enb_id = msg["head"]["b_id"]
+
+        if self.vbs.enb_id != enb_id:
+            return
+
+        if "cells" in conf_repl:
+            self.vbs.cells = conf_repl["cells"]
+
+            from empower.vbs_stats.vbs_cell_stats import vbs_cell_stats
+
+            stats_req = {
+                "event_type": "trigger",
+                "stats_type": "prb_utilization"
+            }
+
+            # Initiate Cell PRB utilization stats in all the cells of VBS
+            for i in self.vbs.cells:
+                for tenant_id in RUNTIME.tenants.keys():
+                    if self.vbs.addr in RUNTIME.tenants[tenant_id].vbses:
+                        vbs_cell_stats(tenant_id=tenant_id,
+                                      vbs=self.vbs.addr,
+                                      cell=self.vbs.cells[i]["phys_cell_id"],
+                                      stats_req=stats_req)
+
+        if "ran_sh_i" in conf_repl:
+            self.vbs.ran_sh_i = conf_repl["ran_sh_i"]
+
+    def send_ues_id_req(self):
         """ Send request for UEs ID registered in VBS """
 
         ues_id_req = main_pb2.emage_msg()
 
         enb_id = ether_to_hex(self.vbs.addr)
-        # Transaction identifier is one by default.
+        # Transaction identifier is one by default for trigger messages
         create_header(1, enb_id, ues_id_req.head)
 
         # Creating a trigger message to fetch UE RNTIs
@@ -422,25 +465,46 @@ class VBSPConnection(object):
 
         self.stream_send(ues_id_req)
 
-    def send_eNB_cells_info_req(self):
-        """ Send request for information about cells in eNB """
+    def send_vbs_cells_conf_req(self):
+        """ Send request for configuration about cells in VBS (eNB) """
 
         eNB_cells_req = main_pb2.emage_msg()
 
         enb_id = ether_to_hex(self.vbs.addr)
-        # Transaction identifier is zero by default.
+        # Transaction identifier is zero by default for single event requests
         create_header(0, enb_id, eNB_cells_req.head)
 
-        # Creating a single event message to fetch cells information in eNB
+        # Creating a single event message to fetch cells information in VBS
         se_msg = eNB_cells_req.se
 
         eNB_cells_msg = se_msg.mENB_cells
         eNB_cells_req_msg = eNB_cells_msg.req
 
         eNB_cells_req_msg.enb_info_types = 0 | configs_pb2.ENB_CELLS_INFO
-        eNB_cells_req_msg.enb_info_types |= configs_pb2.ENB_RAN_SHARING_INFO
 
-        LOG.info("Sending eNB cells information request to VBS %s (%u)",
+        LOG.info("Sending VBS (eNB) cells conf request to VBS %s (%u)",
+                 self.vbs.addr, enb_id)
+
+        self.stream_send(eNB_cells_req)
+
+    def send_vbs_ran_sh_conf_req(self):
+        """ Send request for configuration about RAN sharing in VBS (eNB) """
+
+        eNB_cells_req = main_pb2.emage_msg()
+
+        enb_id = ether_to_hex(self.vbs.addr)
+        # Transaction identifier is zero by default for single event requests
+        create_header(0, enb_id, eNB_cells_req.head)
+
+        # Creating a single event message to fetch cells information in VBS
+        se_msg = eNB_cells_req.se
+
+        eNB_cells_msg = se_msg.mENB_cells
+        eNB_cells_req_msg = eNB_cells_msg.req
+
+        eNB_cells_req_msg.enb_info_types = 0 | configs_pb2.ENB_RAN_SHARING_INFO
+
+        LOG.info("Sending VBS (eNB) RAN sharing conf request to VBS %s (%u)",
                  self.vbs.addr, enb_id)
 
         self.stream_send(eNB_cells_req)
@@ -451,7 +515,7 @@ class VBSPConnection(object):
         rrc_m_conf_req = main_pb2.emage_msg()
         enb_id = ether_to_hex(self.vbs.addr)
 
-        # Transaction identifier is one by default.
+        # Transaction identifier is one by default
         create_header(1, enb_id, rrc_m_conf_req.head)
 
         # Creating a trigger message to fetch UE RNTIs
@@ -473,7 +537,7 @@ class VBSPConnection(object):
         self.stream.read_bytes(4, self._on_read)
 
     def _on_disconnect(self):
-        """Handle VBSP disconnection."""
+        """ Handle VBSP disconnection """
 
         if not self.vbs:
             return
@@ -489,18 +553,20 @@ class VBSPConnection(object):
         # reset state
         self.vbs.last_seen = 0
         self.vbs.connection = None
+        self.vbs.ran_sh_i = None
+        self.vbs.cells = None
         self.vbs.ues = {}
         self.vbs.period = 0
         self.vbs = None
 
     def send_bye_message_to_self(self):
-        """Send a unsollicited BYE message to self."""
+        """ Send a unsollicited BYE message to self """
 
         for handler in self.server.pt_types_handlers[PRT_VBSP_BYE]:
             handler(self.vbs)
 
     def send_register_message_to_self(self):
-        """Send a REGISTER message to self."""
+        """ Send a REGISTER message to self """
 
         for handler in self.server.pt_types_handlers[PRT_VBSP_REGISTER]:
             handler(self.vbs)
