@@ -15,7 +15,7 @@
 # specific language governing permissions and limitations
 # under the License.
 
-"""VBS RRC Stats Module."""
+"""UE RRC Stats Module."""
 
 from protobuf_to_dict import protobuf_to_dict
 from empower.vbsp.messages import statistics_pb2
@@ -25,25 +25,24 @@ from empower.core.ue import UE
 from empower.datatypes.etheraddress import EtherAddress
 from empower.vbsp.vbspserver import ModuleVBSPWorker
 from empower.core.module import ModuleTrigger
-from empower.vbs_stats import RRC_STATS_RAT_TYPE
-from empower.vbs_stats import RRC_STATS_REPORT_CONF_TYPE
-from empower.vbs_stats import RRC_STATS_TRIGGER_QUANT
-from empower.vbs_stats import RRC_STATS_BW
-from empower.vbs_stats import RRC_STATS_REPORT_INTR
-from empower.vbs_stats import RRC_STATS_NUM_REPORTS
-from empower.vbs_stats import RRC_STATS_EVENT_THRESHOLD_TYPE
-from empower.vbs_stats import PRT_VBSP_RRC_STATS
+from empower.ue_stats import RRC_STATS_RAT_TYPE
+from empower.ue_stats import RRC_STATS_REPORT_CONF_TYPE
+from empower.ue_stats import RRC_STATS_TRIGGER_QUANT
+from empower.ue_stats import RRC_STATS_BW
+from empower.ue_stats import RRC_STATS_REPORT_INTR
+from empower.ue_stats import RRC_STATS_NUM_REPORTS
+from empower.ue_stats import RRC_STATS_EVENT_THRESHOLD_TYPE
+from empower.ue_stats import PRT_UE_RRC_STATS
 from empower.events.ueleave import ueleave
-from empower.ue_confs.ue_rrc_meas_confs import ue_rrc_meas_confs
 from empower.vbsp.vbspconnection import create_header
 from empower.core.utils import ether_to_hex
 from empower.main import RUNTIME
 
 
-class VBSRRCStats(ModuleTrigger):
-    """ VBSRRCStats object. """
+class UERRCStats(ModuleTrigger):
+    """ UERRCStats object. """
 
-    MODULE_NAME = "vbs_rrc_stats"
+    MODULE_NAME = "ue_rrc_stats"
     REQUIRED = ['module_type', 'worker', 'tenant_id', 'vbs', 'ue', 'meas_req']
 
     def __init__(self):
@@ -94,7 +93,7 @@ class VBSRRCStats(ModuleTrigger):
 
     @vbs.setter
     def vbs(self, value):
-        """Set VBSP."""
+        """Set VBS."""
 
         vbses = RUNTIME.tenants[self.tenant_id].vbses
 
@@ -229,7 +228,7 @@ class VBSRRCStats(ModuleTrigger):
         self._meas_reply = protobuf_to_dict(response)
 
         event_type = response.WhichOneof("event_types")
-        meas = self._meas_reply[event_type]["mRRC_meas"]["repl"]
+        meas = self._meas_reply[event_type][PRT_UE_RRC_STATS]["repl"]
 
         if "PCell_rsrp" in meas:
             ue.pcell_rsrp = meas["PCell_rsrp"]
@@ -504,32 +503,31 @@ class VBSRRCStats(ModuleTrigger):
         self.handle_callback(self)
 
 
-class VBSRRCStatsWorker(ModuleVBSPWorker):
+class UERRCStatsWorker(ModuleVBSPWorker):
     """ Counter worker. """
 
     pass
 
 
-def vbs_rrc_stats(**kwargs):
+def ue_rrc_stats(**kwargs):
     """Create a new module."""
 
     return \
-        RUNTIME.components[VBSRRCStatsWorker.__module__].add_module(**kwargs)
+        RUNTIME.components[UERRCStatsWorker.__module__].add_module(**kwargs)
 
 
-def bound_vbs_rrc_stats(self, **kwargs):
+def bound_ue_rrc_stats(self, **kwargs):
     """Create a new module (app version)."""
 
     kwargs['tenant_id'] = self.tenant.tenant_id
     kwargs['ue'] = self.addr
     kwargs['vbs'] = self.vbs.addr
-    return vbs_rrc_stats(**kwargs)
-    print("printing tenatn id", self.tenant.tenant_id)
+    return ue_rrc_stats(**kwargs)
 
-setattr(UE, VBSRRCStats.MODULE_NAME, bound_vbs_rrc_stats)
+setattr(UE, UERRCStats.MODULE_NAME, bound_ue_rrc_stats)
 
 
 def launch():
     """ Initialize the module. """
 
-    return VBSRRCStatsWorker(VBSRRCStats, PRT_VBSP_RRC_STATS)
+    return UERRCStatsWorker(UERRCStats, PRT_UE_RRC_STATS)
