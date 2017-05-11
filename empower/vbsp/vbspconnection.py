@@ -171,7 +171,7 @@ class VBSPConnection(object):
             # Update the sequency number from received message
             self.seq = deserialized_msg.head.seq
 
-            print(deserialized_msg.__str__())
+            # print(deserialized_msg.__str__())
 
             self._trigger_message(deserialized_msg)
             self._wait()
@@ -195,6 +195,10 @@ class VBSPConnection(object):
 
         if msg_type != PRT_VBSP_HELLO and not self.vbs:
             return
+
+        # Print messages other than hello messages
+        if msg_type != PRT_VBSP_HELLO:
+            print(deserialized_msg.__str__())
 
         handler_name = "_handle_%s" % self.server.pt_types[msg_type]
 
@@ -348,7 +352,8 @@ class VBSPConnection(object):
                     # Trigger UE RRC stats for the operating frequency of UE
                     from empower.ue_stats.ue_rrc_stats import ue_rrc_stats
 
-                    if "carrier_freq" in ue.vbs.cells[0] and \
+                    if ue.vbs.cells and len(ue.vbs.cells) > 0 and \
+                        "carrier_freq" in ue.vbs.cells[0] and \
                         "num_rbs_dl" in ue.vbs.cells[0]:
                         # UE is assumed to be attached to Cell 0.
                         meas_req = {
@@ -429,6 +434,7 @@ class VBSPConnection(object):
         from empower.ue_stats.ue_rrc_stats import ue_rrc_stats
 
         if "freq" in rrc_m_conf_repl and \
+            ue.vbs.cells and len(ue.vbs.cells) > 0 and \
             "num_rbs_dl" in ue.vbs.cells[0]:
             # UE is assumed to be attached to Cell 0.
             meas_req = {

@@ -61,7 +61,7 @@ class UERRCStats(ModuleTrigger):
 
         self.log.info("UE %s disconnected" % ue.rnti)
 
-        worker = RUNTIME.components[VBSRRCStatsWorker.__module__]
+        worker = RUNTIME.components[UERRCStatsWorker.__module__]
 
         module_ids = []
         module_ids.extend(worker.modules.keys())
