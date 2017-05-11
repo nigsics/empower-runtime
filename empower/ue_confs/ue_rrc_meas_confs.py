@@ -21,6 +21,7 @@ from protobuf_to_dict import protobuf_to_dict
 from empower.vbsp.messages import configs_pb2
 from empower.vbsp.messages import main_pb2
 from empower.core.app import EmpowerApp
+from empower.core.ue import UE
 from empower.datatypes.etheraddress import EtherAddress
 from empower.core.module import ModuleTrigger
 from empower.vbsp.vbspserver import ModuleVBSPWorker
@@ -333,9 +334,11 @@ def bound_ue_rrc_meas_confs(self, **kwargs):
     """Create a new module (app version)."""
 
     kwargs['tenant_id'] = self.tenant.tenant_id
+    kwargs['ue'] = self.addr
+    kwargs['vbs'] = self.vbs.addr
     return ue_rrc_meas_confs(**kwargs)
 
-setattr(EmpowerApp, UERRCMeasConfs.MODULE_NAME, bound_ue_rrc_meas_confs)
+setattr(UE, UERRCMeasConfs.MODULE_NAME, bound_ue_rrc_meas_confs)
 
 
 def launch():

@@ -62,7 +62,7 @@ function send_rrc_req() {
     }
 }
 
-$("#ueSelect").on("click", send_rrc_req);
+// $("#ueSelect").on("click", send_rrc_req);
 
 /* SVG for D3 dimensions. */
 var area_width  = 550,

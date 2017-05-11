@@ -50,7 +50,7 @@ class VBSCellStats(ModuleTrigger):
         self._stats_req = None
         self._stats_reply = None
 
-        vbsdown(tenant_id=self.tenant.tenant_id, callback=self.vbs_down_callback)
+        vbsdown(tenant_id=self.tenant_id, callback=self.vbs_down_callback)
 
     def vbs_down_callback(self, vbs):
         """Called when an VBS disconnects from a tenant."""
@@ -201,8 +201,8 @@ class VBSCellStats(ModuleTrigger):
             return
 
         cell_present = 0
-        for i in vbs.cells:
-            if self.cell == vbs.cells[i]["phys_cell_id"]:
+        for cell in vbs.cells:
+            if self.cell == cell["phys_cell_id"]:
                 cell_present = 1
                 break
 

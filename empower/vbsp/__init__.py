@@ -21,6 +21,9 @@ EMAGE_VERSION = 1
 
 MAX_NUM_CCS = 1
 
+# Every 5 seconds
+UE_RRC_STATS_REPORT_INTERVAL = 5
+
 PRT_UE_JOIN = "join"
 PRT_UE_LEAVE = "leave"
 PRT_VBSP_BYE = "bye"

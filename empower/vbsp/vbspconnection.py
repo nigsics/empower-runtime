@@ -25,6 +25,7 @@ import sys
 from protobuf_to_dict import protobuf_to_dict
 
 from empower.vbsp import EMAGE_VERSION
+from empower.vbsp import UE_RRC_STATS_REPORT_INTERVAL
 from empower.vbsp import PRT_UE_JOIN
 from empower.vbsp import PRT_UE_LEAVE
 from empower.vbsp import PRT_VBSP_HELLO
@@ -235,11 +236,11 @@ class VBSPConnection(object):
             # set connection
             vbs.connection = self
 
-            # request registered UEs
-            self.send_ues_id_req()
-
             # request VBS Cells configuration information
             self.send_vbs_cells_conf_req()
+
+            # request registered UEs
+            self.send_ues_id_req()
 
             # request VBS for RAN sharing information
             self.send_vbs_ran_sh_conf_req()
@@ -344,6 +345,30 @@ class VBSPConnection(object):
                                       ue=ue.rnti,
                                       conf_req=conf_req)
 
+                    # Trigger UE RRC stats for the operating frequency of UE
+                    from empower.ue_stats.ue_rrc_stats import ue_rrc_stats
+
+                    if "carrier_freq" in ue.vbs.cell[0] and \
+                        "num_rbs_dl" in ue.vbs.cell[0]:
+                        # UE is assumed to be attached to Cell 0.
+                        meas_req = {
+                            "rat_type": "EUTRA",
+                            "cell_to_measure": [],
+                            "blacklist_cells": [],
+                            "bandwidth": ue.vbs.cell[0]["num_rbs_dl"],
+                            "carrier_freq": ue.vbs.cell[0]["carrier_freq"],
+                            "report_type": "periodical_ref_signal",
+                            "report_interval": UE_RRC_STATS_REPORT_INTERVAL,
+                            "trigger_quantity": "RSRP",
+                            "num_of_reports": "infinite",
+                            "max_report_cells": 3,
+                        }
+
+                        ue_rrc_stats(tenant_id=ue.tenant.tenant_id,
+                                      vbs=ue.vbs.addr,
+                                      ue=ue.rnti,
+                                      meas_req=meas_req)
+
             if ue.plmn_id != "" and plmn_id == "":
 
                 # Raise UE leave
@@ -400,6 +425,30 @@ class VBSPConnection(object):
             ue.capabilities = rrc_m_conf_repl["capabilities"]
             del rrc_m_conf_repl["capabilities"]
 
+        # Trigger UE RRC stats for the operating frequency of UE
+        from empower.ue_stats.ue_rrc_stats import ue_rrc_stats
+
+        if "freq" in rrc_m_conf_repl and \
+            "num_rbs_dl" in ue.vbs.cell[0]:
+            # UE is assumed to be attached to Cell 0.
+            meas_req = {
+                "rat_type": "EUTRA",
+                "cell_to_measure": [],
+                "blacklist_cells": [],
+                "bandwidth": ue.vbs.cell[0]["num_rbs_dl"],
+                "carrier_freq": rrc_m_conf_repl["freq"],
+                "report_type": "periodical_ref_signal",
+                "report_interval": UE_RRC_STATS_REPORT_INTERVAL,
+                "trigger_quantity": "RSRP",
+                "num_of_reports": "infinite",
+                "max_report_cells": 3,
+            }
+
+            ue_rrc_stats(tenant_id=ue.tenant.tenant_id,
+                          vbs=ue.vbs.addr,
+                          ue=ue.rnti,
+                          meas_req=meas_req)
+
         ue.rrc_meas_config = rrc_m_conf_repl
 
     def _handle_vbs_cells_conf_repl(self, main_msg):
@@ -431,12 +480,12 @@ class VBSPConnection(object):
             }
 
             # Initiate Cell PRB utilization stats in all the cells of VBS
-            for i in self.vbs.cells:
+            for cell in self.vbs.cells:
                 for tenant_id in RUNTIME.tenants.keys():
                     if self.vbs.addr in RUNTIME.tenants[tenant_id].vbses:
                         vbs_cell_stats(tenant_id=tenant_id,
                                       vbs=self.vbs.addr,
-                                      cell=self.vbs.cells[i]["phys_cell_id"],
+                                      cell=cell["phys_cell_id"],
                                       stats_req=stats_req)
 
         if "ran_sh_i" in conf_repl:
