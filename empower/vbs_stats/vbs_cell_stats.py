@@ -243,7 +243,7 @@ class VBSCellStats(ModuleTrigger):
 
         vbs.connection.stream_send(vbs_cell_stats_req)
 
-    def cleanup(self):
+    def stop(self):
         """Remove this module."""
 
         self.log.info("Cleanup %s (id=%u)", self.module_type, self.module_id)

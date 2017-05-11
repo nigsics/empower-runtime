@@ -348,15 +348,15 @@ class VBSPConnection(object):
                     # Trigger UE RRC stats for the operating frequency of UE
                     from empower.ue_stats.ue_rrc_stats import ue_rrc_stats
 
-                    if "carrier_freq" in ue.vbs.cell[0] and \
-                        "num_rbs_dl" in ue.vbs.cell[0]:
+                    if "carrier_freq" in ue.vbs.cells[0] and \
+                        "num_rbs_dl" in ue.vbs.cells[0]:
                         # UE is assumed to be attached to Cell 0.
                         meas_req = {
                             "rat_type": "EUTRA",
                             "cell_to_measure": [],
                             "blacklist_cells": [],
-                            "bandwidth": ue.vbs.cell[0]["num_rbs_dl"],
-                            "carrier_freq": ue.vbs.cell[0]["carrier_freq"],
+                            "bandwidth": ue.vbs.cells[0]["num_rbs_dl"],
+                            "carrier_freq": ue.vbs.cells[0]["carrier_freq"],
                             "report_type": "periodical_ref_signal",
                             "report_interval": UE_RRC_STATS_REPORT_INTERVAL,
                             "trigger_quantity": "RSRP",
@@ -429,13 +429,13 @@ class VBSPConnection(object):
         from empower.ue_stats.ue_rrc_stats import ue_rrc_stats
 
         if "freq" in rrc_m_conf_repl and \
-            "num_rbs_dl" in ue.vbs.cell[0]:
+            "num_rbs_dl" in ue.vbs.cells[0]:
             # UE is assumed to be attached to Cell 0.
             meas_req = {
                 "rat_type": "EUTRA",
                 "cell_to_measure": [],
                 "blacklist_cells": [],
-                "bandwidth": ue.vbs.cell[0]["num_rbs_dl"],
+                "bandwidth": ue.vbs.cells[0]["num_rbs_dl"],
                 "carrier_freq": rrc_m_conf_repl["freq"],
                 "report_type": "periodical_ref_signal",
                 "report_interval": UE_RRC_STATS_REPORT_INTERVAL,
@@ -604,6 +604,7 @@ class VBSPConnection(object):
         self.vbs.connection = None
         self.vbs.ran_sh_i = None
         self.vbs.cells = None
+        self.vbs.cell_stats = None
         self.vbs.ues = {}
         self.vbs.period = 0
         self.vbs = None

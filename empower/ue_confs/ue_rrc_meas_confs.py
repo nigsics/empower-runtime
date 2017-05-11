@@ -249,7 +249,7 @@ class UERRCMeasConfs(ModuleTrigger):
 
         ueleave(tenant_id=self.tenant_id, callback=self.ue_leave_callback)
 
-    def cleanup(self):
+    def stop(self):
         """Remove this module."""
 
         self.log.info("Cleanup %s (id=%u)", self.module_type, self.module_id)
