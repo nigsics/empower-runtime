@@ -66,6 +66,7 @@ class VBSCellStats(ModuleTrigger):
             m = worker.modules[module_id]
             # Remove all the module pertaining to disconnected VBS
             if EtherAddress(m.vbs) == vbs.addr:
+                m.cleanup()
                 m.unload()
 
     @property
@@ -243,7 +244,7 @@ class VBSCellStats(ModuleTrigger):
 
         vbs.connection.stream_send(vbs_cell_stats_req)
 
-    def stop(self):
+    def cleanup(self):
         """Remove this module."""
 
         self.log.info("Cleanup %s (id=%u)", self.module_type, self.module_id)

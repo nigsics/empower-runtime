@@ -64,6 +64,7 @@ class UERRCMeasConfs(ModuleTrigger):
             m = worker.modules[module_id]
             # Remove all the module pertaining to disconnected UE
             if m.ue == ue.rnti and EtherAddress(m.vbs) == ue.vbs.addr:
+                m.cleanup()
                 m.unload()
 
     @property
@@ -249,7 +250,7 @@ class UERRCMeasConfs(ModuleTrigger):
 
         ueleave(tenant_id=self.tenant_id, callback=self.ue_leave_callback)
 
-    def stop(self):
+    def cleanup(self):
         """Remove this module."""
 
         self.log.info("Cleanup %s (id=%u)", self.module_type, self.module_id)
