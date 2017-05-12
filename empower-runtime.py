@@ -33,6 +33,7 @@ if __name__ == "__main__":
              'ue_confs.ue_rrc_meas_confs',
              'ue_stats.ue_rrc_stats',
              'vbs_stats.vbs_cell_stats',
+             'vbsp.ue_handover',
              'events.wtpdown',
              'events.wtpup',
              'events.lvapleave',

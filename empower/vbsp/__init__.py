@@ -17,6 +17,8 @@
 
 """VBSP Server module."""
 
+from empower.vbsp.messages import commands_pb2
+
 EMAGE_VERSION = 1
 
 MAX_NUM_CCS = 1
@@ -35,6 +37,7 @@ PRT_VBSP_HELLO = "mHello"
 PRT_VBSP_UES_ID = "mUEs_id"
 PRT_UE_RRC_MEAS_CONF = "mUE_rrc_meas_conf"
 PRT_VBSP_CELLS_CONF = "mENB_cells"
+PRT_CTRL_COMMANDS = "mCtrl_cmds"
 
 PRT_TYPES = {PRT_VBSP_BYE: None,
              PRT_VBSP_REGISTER: None,
@@ -52,3 +55,8 @@ PRT_TYPES_HANDLERS = {PRT_VBSP_BYE: [],
                       PRT_UE_LEAVE: [],
                       PRT_VBSP_HELLO: [],
                       PRT_VBSP_UES_ID: []}
+
+UE_HANDOVER_CAUSE = {
+    "time_critical": commands_pb2.HC_TIME_CRITICAL,
+    "resource_optimization": commands_pb2.HC_RESOURCE_OPTIMIZATION
+}
