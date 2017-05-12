@@ -20,7 +20,6 @@
 from protobuf_to_dict import protobuf_to_dict
 from empower.vbsp.messages import statistics_pb2
 from empower.vbsp.messages import main_pb2
-from empower.core.app import EmpowerApp
 from empower.core.vbs import VBS
 from empower.datatypes.etheraddress import EtherAddress
 from empower.vbsp.vbspserver import ModuleVBSPWorker

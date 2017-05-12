@@ -391,6 +391,10 @@ class VBSPConnection(object):
         existing_ues.extend(RUNTIME.ues.keys())
 
         for ue_addr in existing_ues:
+
+            if ue_addr[0] != hex_to_ether(main_msg.head.b_id):
+                continue
+
             if ue_addr not in active_ues:
                 RUNTIME.remove_ue(ue_addr)
 
