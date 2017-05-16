@@ -62,7 +62,7 @@ function send_rrc_req() {
     }
 }
 
-// $("#ueSelect").on("click", send_rrc_req);
+$("#ueSelect").on("click", send_rrc_req);
 
 /* SVG for D3 dimensions. */
 var area_width  = 550,
@@ -273,7 +273,15 @@ function updateSignalGraph() {
     nw_enbs.enter()
             .append('svg:image')
             .attr('class', 'enb')
-            .attr('xlink:href', "/static/apps/signalgraph/bs.png")
+            .attr('xlink:href', function(d) {
+                if (d.tooltip.startsWith("PCI")) {
+                    // Neighboring cell
+                    return "/static/apps/signalgraph/lte.png";
+                } else {
+                    // Serving cell
+                    return "/static/apps/signalgraph/bs.png"
+                }
+            })
             .attr('width', 50)
             .attr('height', 50)
             .on("dblclick", dblclick)
@@ -291,7 +299,15 @@ function updateSignalGraph() {
                     .style("top", (d3.event.pageY - 28) + "px");
             });
 
-    nw_enbs.attr('xlink:href', "/static/apps/signalgraph/bs.png")
+    nw_enbs.attr('xlink:href', function(d) {
+                if (d.tooltip.startsWith("PCI")) {
+                    // Neighboring cell
+                    return "/static/apps/signalgraph/lte.png";
+                } else {
+                    // Serving cell
+                    return "/static/apps/signalgraph/bs.png"
+                }
+            })
             .attr('width', 50)
             .attr('height', 50);
 
