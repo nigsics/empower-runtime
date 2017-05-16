@@ -609,6 +609,9 @@ class VBSPConnection(object):
             if ue.vbs == self.vbs:
                 RUNTIME.remove_ue(ue.addr)
 
+        # Send bye message
+        self.send_bye_message_to_self()
+
         # reset state
         self.vbs.last_seen = 0
         self.vbs.connection = None
