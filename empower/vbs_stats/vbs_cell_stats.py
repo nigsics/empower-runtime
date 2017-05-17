@@ -49,8 +49,6 @@ class VBSCellStats(ModuleTrigger):
         self._stats_req = None
         self._stats_reply = None
 
-        vbsdown(tenant_id=self.tenant_id, callback=self.vbs_down_callback)
-
     def vbs_down_callback(self, vbs):
         """Called when an VBS disconnects from a tenant."""
 
@@ -242,6 +240,8 @@ class VBSCellStats(ModuleTrigger):
                       self.module_id)
 
         vbs.connection.stream_send(vbs_cell_stats_req)
+
+        vbsdown(tenant_id=self.tenant_id, callback=self.vbs_down_callback)
 
     def cleanup(self):
         """Remove this module."""
