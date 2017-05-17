@@ -354,7 +354,8 @@ class VBSPConnection(object):
 
                     if ue.vbs.cells and len(ue.vbs.cells) > 0 and \
                         "carrier_freq" in ue.vbs.cells[0] and \
-                        "num_rbs_dl" in ue.vbs.cells[0]:
+                        "num_rbs_dl" in ue.vbs.cells[0] and \
+                        ue.vbs.cells[0]["num_rbs_dl"] > 0:
                         # UE is assumed to be attached to Cell 0.
                         meas_req = {
                             "rat_type": "EUTRA",
@@ -439,7 +440,8 @@ class VBSPConnection(object):
 
         if "freq" in rrc_m_conf_repl and \
             ue.vbs.cells and len(ue.vbs.cells) > 0 and \
-            "num_rbs_dl" in ue.vbs.cells[0]:
+            "num_rbs_dl" in ue.vbs.cells[0] and \
+            ue.vbs.cells[0]["num_rbs_dl"] > 0:
             # UE is assumed to be attached to Cell 0.
             meas_req = {
                 "rat_type": "EUTRA",
