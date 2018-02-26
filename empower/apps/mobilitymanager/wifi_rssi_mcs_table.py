@@ -60,8 +60,6 @@ def GetEstimatedSendingRateFromRssi(rssi_db) :
 
 
 def ack_time (mcs) : 
-	rate_ack 
-	t_ack
 	if GetSendingRateFromMcs(mcs) >= 24000 :
 		rate_ack = 24000
 	else :
