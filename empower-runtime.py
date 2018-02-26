@@ -29,6 +29,8 @@ if __name__ == "__main__":
              'vbsp.vbspserver',
              'energinoserver.energinoserver',
              'intentserver.intentserver',
+             #tag_for_nif
+             'nif_stats.nif_stats',
              'lvap_stats.lvap_stats',
              'events.wtpdown',
              'events.wtpup',
