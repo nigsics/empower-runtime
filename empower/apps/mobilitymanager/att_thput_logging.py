@@ -17,7 +17,7 @@
 
 from empower.core.app import EmpowerApp
 from empower.core.app import DEFAULT_PERIOD
-import wifi_rssi_mcs_table
+import wifi_rssi_mcs_table as table
 
 class AttThputValidation(EmpowerApp):
     """
@@ -34,6 +34,7 @@ class AttThputValidation(EmpowerApp):
     # this is not the right place for this. Move it later. 
     WIFI_DIFS_B = 50 
     WIFI_SIFS_B = 10
+    T_HEADER = 100
 
     num_lvap_in_network = 0
     num_wtp_in_network = 0
@@ -102,7 +103,7 @@ class AttThputValidation(EmpowerApp):
         wtp = ucqm.wtp 
         for lvap in ucqm.maps : 
             self.dl_est_rate[wtp,lvap] = \
-                        GetEstimatedSendingRateFromRssi(ucqm.maps[lvap]['last_rssi_avg'])
+                        table.GetEstimatedSendingRateFromRssi(ucqm.maps[lvap]['last_rssi_avg'])
             #ucqm.maps[lvap]['last_rssi_std']
         # Do I have to use the concept of block to access the avg and std rssi ?
 
@@ -206,7 +207,7 @@ class AttThputValidation(EmpowerApp):
                     denominator += ( (self.dl_arr_rate_pps[wtp,lvap][w]) \
                                     * (self.dl_frame_len_bytes[wtp,lvap][w])) \
                                         /(self.dl_est_rate[wtp,lvap][w] + WIFI_DIFS_B + WIFI_SIFS_B + T_HEADER \
-                                            + ack_time(self.dl_est_rate[wtp,lvap][w]))
+                                            + table.ack_time(self.dl_est_rate[wtp,lvap][w]))
         
             # Get stats from the first structure object which is the ue
             # whose attainable throughput is to be measured

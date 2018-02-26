@@ -1,3 +1,5 @@
+import math
+
 RECV_NOISE = -95.0
 WIFI_STD = "g20mhz"
 
@@ -35,7 +37,7 @@ def GetSnrFromRssi (rssi_db) :
 	return (snr_db)
 
 def GetMcsFromSnr(snr_db):
-	snr_db_lower = snr_db; 
+	snr_db_lower = int(math.floor(snr_db)); 
 	if WIFI_STD == "g20mhz" :
 		return(g_mcs_table[snr_db_lower])
 	#
@@ -43,8 +45,8 @@ def GetMcsFromSnr(snr_db):
 	#	return(n_mcs_table[0][snr_db_lower])
 	#elif WIFI_STD == "n40mhz" :
 	#	return(n_mcs_table[0][snr_db_lower])
-    # ERROR: Unrecognised 802.11 standard
-    else : 
+	# ERROR: Unrecognised 802.11 standard
+	else : 
 		return (-1)
 
 def GetSendingRateFromMcs(mcs) : 
@@ -58,11 +60,11 @@ def GetEstimatedSendingRateFromRssi(rssi_db) :
 
 
 def ack_time (mcs) : 
-	uint32_t rate_ack 
-	double t_ack
+	rate_ack 
+	t_ack
 	if GetSendingRateFromMcs(mcs) >= 24000 :
 		rate_ack = 24000
 	else :
 		rate_ack = 2000
 
-    return (((float)(L_ACK * 8 * 1000) / (float)(rate_ack)) + T_HEADER)
+	return (((float)(L_ACK * 8 * 1000) / (float)(rate_ack)) + T_HEADER)
