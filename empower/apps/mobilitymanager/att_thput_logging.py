@@ -35,6 +35,7 @@ class AttThputValidation(EmpowerApp):
     WIFI_DIFS_B = 50 
     WIFI_SIFS_B = 10
     T_HEADER = 100
+    L_ACK = 10
 
     num_lvap_in_network = 0
     num_wtp_in_network = 0
