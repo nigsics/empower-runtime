@@ -86,35 +86,39 @@ class AquametMobilityManager(EmpowerApp):
         """Called when a new WTP connects to the controller."""
         self.new_wtps.append(wtp)
 
-        self.num_wtp_in_network += 1
-        self.dl_aggr_attempts[wtp.addr] = [0]*self.sliding_window_samples
-        self.dl_aggr_succ[wtp.addr] = [0]*self.sliding_window_samples
-        self.dl_aggr_pdr[wtp.addr] = [0]*self.sliding_window_samples
-        # Add polling callback to this joined WTP
-        # EAch wtp has 2 network interfaces, so I expect that there will be 
-        # 2 blocks for each WTP.
-        self.log.info("Number of blocks is ",len(wtp.supports))
-        for block in wtp.supports:
-            # UCQM has the avg and std of rssi values
-            self.ucqm(block=block, every=self.window_time,
-                callback=self.rssi_callback)
-            self.wifistats(block=block, every=self.window_time,
-                callback=self.wifi_stats_callback)            
+    def wtp_up_initialize(self) :
+        for wtp in self.new_wtps : 
+            self.num_wtp_in_network += 1
+            self.dl_aggr_attempts[wtp.addr] = [0]*self.sliding_window_samples
+            self.dl_aggr_succ[wtp.addr] = [0]*self.sliding_window_samples
+            self.dl_aggr_pdr[wtp.addr] = [0]*self.sliding_window_samples
+            # Add polling callback to this joined WTP
+            # EAch wtp has 2 network interfaces, so I expect that there will be 
+            # 2 blocks for each WTP.
+            self.log.info("Number of blocks is ",len(wtp.supports))
+            for block in wtp.supports:
+                # UCQM has the avg and std of rssi values
+                self.ucqm(block=block, every=self.window_time,
+                    callback=self.rssi_callback)
+                self.wifistats(block=block, every=self.window_time,
+                    callback=self.wifi_stats_callback)            
                 
             
     def lvap_join_callback(self, lvap):
         """ New LVAP. """
         self.new_lvaps.append(lvap)
 
-        self.num_lvap_in_network += 1
-        # Add polling callback to this joined lvap
-        self.bin_counter(lvap=lvap.addr,
-                        bins=[512, 1514, 8192],
-                        every=self.window_time,
-                        callback=self.counters_callback)
-        self.nif_stats(lvap=lvap.addr,
-                        every=self.window_time,
-                        callback=self.nif_stats_callback)
+    def lvap_join_initialize(self) :
+        for lvap in self.new_lvaps :
+            self.num_lvap_in_network += 1
+            # Add polling callback to this joined lvap
+            self.bin_counter(lvap=lvap.addr,
+                            bins=[512, 1514, 8192],
+                            every=self.window_time,
+                            callback=self.counters_callback)
+            self.nif_stats(lvap=lvap.addr,
+                            every=self.window_time,
+                            callback=self.nif_stats_callback)
 
     def rssi_callback(self, ucqm):
         """ New RSSI stats available. """ 
@@ -268,6 +272,13 @@ class AquametMobilityManager(EmpowerApp):
         """ Periodic job. """
         # Add callbacks for the new WTPs and LVAPs that 
         # have joined the network since last loop periodic trigger
+        self.wtp_up_initialize()
+        # reset this list
+        self.new_wtps=[]
+        self.lvap_join_initialize()        
+        # reset this list
+        self.new_lvaps=[]
+
         self.global_window_counter += 1
         wtp_assoc_set=[]
         # find the lvap using sta mac addr. ??
