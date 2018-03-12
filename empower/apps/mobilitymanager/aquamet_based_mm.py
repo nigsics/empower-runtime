@@ -31,7 +31,7 @@ class AquametMobilityManager(EmpowerApp):
     WIFI_MAC_HEADER_BYTES = 20
     WIFI_PHY_HEADER_BYTES = 15
     # To do: Find the right value for number of bytes in an ACK control frame including all headers for it. 
-    ACK_BYTES = 10
+    ACK_BYTES = 10 # this only includes the payload bytes in the ack frame.
     # The mac address of the client whose throughput is being monitored 
     # and hadover done based on attainable throughput
     tagged_sta_mac_addr='a4:34:d9:bf:50:ef'
@@ -65,10 +65,13 @@ class AquametMobilityManager(EmpowerApp):
     dl_meas_thput={}#[wtp,lvap][sliding window]
     dl_att_thput={}#[wtp,lvap][sliding window]
 
-    dl_aggr_attempts={}#[wtp]
-    dl_aggr_succ={}#[wtp]
+    dl_aggr_attempts={}#[wtp][sliding window]
+    dl_aggr_succ={}#[wtp][sliding window]
     current_assoc_map={}# key=lvap val = wtp associated with
-    #current_assoc_map={}# key = wtp, val = lvaps associated with it. 
+    #current_assoc_map={}# key = wtp, val = lvaps associated with it.
+
+    new_wtps=[]
+    new_lvaps=[] 
 
     def __init__(self, **kwargs):
 
@@ -81,20 +84,28 @@ class AquametMobilityManager(EmpowerApp):
 
     def wtp_up_callback(self, wtp):
         """Called when a new WTP connects to the controller."""
+        self.new_wtps.append(wtp)
+
         self.num_wtp_in_network += 1
-        self.dl_aggr_attempts[wtp.addr] = 0
-        self.dl_aggr_succ[wtp.addr] = 0
+        self.dl_aggr_attempts[wtp.addr] = [0]*self.sliding_window_samples
+        self.dl_aggr_succ[wtp.addr] = [0]*self.sliding_window_samples
+        self.dl_aggr_pdr[wtp.addr] = [0]*self.sliding_window_samples
         # Add polling callback to this joined WTP
         # EAch wtp has 2 network interfaces, so I expect that there will be 
         # 2 blocks for each WTP.
         self.log.info("Number of blocks is ",len(wtp.supports))
         for block in wtp.supports:
+            # UCQM has the avg and std of rssi values
             self.ucqm(block=block, every=self.window_time,
                 callback=self.rssi_callback)
-                # UCQM has the avg and std of rssi values
+            self.wifistats(block=block, every=self.window_time,
+                callback=self.wifi_stats_callback)            
+                
             
     def lvap_join_callback(self, lvap):
         """ New LVAP. """
+        self.new_lvaps.append(lvap)
+
         self.num_lvap_in_network += 1
         # Add polling callback to this joined lvap
         self.bin_counter(lvap=lvap.addr,
@@ -186,8 +197,8 @@ class AquametMobilityManager(EmpowerApp):
         meas_thput_kbps = float(tmp_acked_bytes*8) / self.window_time
         self.dl_pdr[wtp.addr,lvap.addr].insert(0,pdr)
         self.dl_meas_thput[wtp.addr,lvap.addr].insert(0,meas_thput_kbps)
-        self.dl_aggr_attempts[wtp.addr] += tmp_att 
-        self.dl_aggr_succ[wtp.addr] += tmp_succ
+        self.dl_aggr_attempts[wtp.addr][0] += tmp_att 
+        self.dl_aggr_succ[wtp.addr][0] += tmp_succ
 
         self.last_succ = succ
         self.last_att = att
@@ -213,12 +224,14 @@ class AquametMobilityManager(EmpowerApp):
             del self.dl_meas_rate[wtp.addr,lvap.addr][self.sliding_window_samples:]
             del self.dl_meas_thput[wtp.addr,lvap.addr][self.sliding_window_samples:]
 
+    def wifi_stats_callback(self, stats):
+
+
 
     # Evaluate for one wtp association set
     def nif_evaluate_stats(self, wtp_addr, wtp_assoc_set) :   
         self.dl_num_active_clients[wtp_addr] = [0]*self.sliding_window_samples
         self.dl_att_thput[wtp_addr,:] = [0]*self.sliding_window_samples
-        self.dl_aggr_pdr[wtp_addr] = float(self.dl_aggr_succ[wtp_addr])/self.dl_aggr_attempts[wtp_addr]
         for w in range(0,self.sliding_window_samples) :
             self.dl_active_clients = []
             # Find the number of active stations in this window.
@@ -229,6 +242,7 @@ class AquametMobilityManager(EmpowerApp):
 
             denominator = 0
             for wtp_addr in  wtp_assoc_set :
+                self.dl_aggr_pdr[wtp_addr][w] = float(self.dl_aggr_succ[wtp_addr][w])/self.dl_aggr_attempts[wtp_addr][w]
                 for lvap_addr in self.dl_active_clients :
                     ack_time = table.ack_time(table.GetEstimatedMcsFromRssi(self.dl_rssi[wtp_addr,lvap_addr][w]))
                     denominator += ( (self.dl_arr_rate_pps[lvap_addr][w]) \
@@ -252,6 +266,8 @@ class AquametMobilityManager(EmpowerApp):
 
     def loop(self):
         """ Periodic job. """
+        # Add callbacks for the new WTPs and LVAPs that 
+        # have joined the network since last loop periodic trigger
         self.global_window_counter += 1
         wtp_assoc_set=[]
         # find the lvap using sta mac addr. ??
@@ -314,8 +330,10 @@ class AquametMobilityManager(EmpowerApp):
 
         # Reset the things I need to after each loop or each Wm
         for wtp in self.wtps() :
-            self.dl_aggr_attempts[wtp.addr] = 0
-            self.dl_aggr_succ[wtp.addr] = 0
+            self.dl_aggr_attempts[wtp.addr] = circular shift right 
+            self.dl_aggr_succ[wtp.addr] = circular shift right
+            self.dl_aggr_attempts[wtp.addr][0] = 0 
+            self.dl_aggr_succ[wtp.addr][0] = 0
 
 
 def launch(tenant_id, every=DEFAULT_PERIOD):
