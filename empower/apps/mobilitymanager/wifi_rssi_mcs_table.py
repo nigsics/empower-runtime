@@ -1,5 +1,20 @@
 import math
 
+
+""" Constants from the standard. 
+Extend this to find the standard being used and choose the appropriate value"""
+WIFI_DIFS = 50
+WIFI_SIFS = 10
+# To do: Find the right value for number of bytes in a MAC header
+ETH_HEADER_BYTES = 14
+WIFI_MAC_HEADER_BYTES = 34
+# WIFI_PLCP_HEADER_BYTES = 48/8
+WIFI_PLCP_HEADER_PREAMBLE_TIME = 192  # micro s
+# WIFI_PREAMBLE_TIME = 16# micro seconds
+# To do: Find the right value for number of bytes in an ACK control frame including all headers for it.
+ACK_BYTES = 10  # this only includes the payload bytes in the ack frame.
+
+
 RECV_NOISE = -98.0
 WIFI_STD = 'g20mhz'
 
@@ -81,5 +96,5 @@ def ack_time (mcs) :
 	else :
 		rate_ack = 2000
 
-	return ((float(ACK_BYTES + WIFI_MAC_HEADER_BYTES * 8 * 1000) / float(rate_ack)) \
+	return ((float(ACK_BYTES + WIFI_MAC_HEADER_BYTES * 8 * 1000) / float(rate_ack))
 		+ WIFI_PLCP_HEADER_PREAMBLE_TIME)
