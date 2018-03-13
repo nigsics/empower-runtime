@@ -94,7 +94,7 @@ class AquametMobilityManager(EmpowerApp):
             # Add polling callback to this joined WTP
             # EAch wtp has 2 network interfaces, so I expect that there will be 
             # 2 blocks for each WTP.
-            self.log.info("Number of blocks is " + str(len(wtp.supports)))
+            #self.log.info("Number of blocks is " + str(len(wtp.supports)))
             for block in wtp.supports:
                 # UCQM has the avg and std of rssi values
                 self.ucqm(block=block, every=self.window_time,
@@ -142,12 +142,20 @@ class AquametMobilityManager(EmpowerApp):
                 self.dl_rssi[wtp.addr, lvap_addr] = []
 
             self.dl_rssi[wtp.addr,lvap_addr].insert(0,ucqm.maps[lvap_addr]['last_rssi_avg'])
+            self.log.info("windNum: " + str(self.global_window_counter) +
+            " last_rssi_avg between wtp " + str(wtp.addr) +
+            " and lvap " + str(lvap_addr) +
+            " is " + str(self.dl_rssi[wtp.addr,lvap_addr][0]))
 
             if (wtp.addr,lvap_addr) not in self.dl_est_rate:
                 self.dl_est_rate[wtp.addr, lvap_addr] = []
 
             self.dl_est_rate[wtp.addr,lvap_addr].insert(0,
                         table.GetEstimatedSendingRateFromRssi(ucqm.maps[lvap_addr]['last_rssi_avg']))
+            self.log.info("windNum: " + str(self.global_window_counter) +
+            " est_rate between wtp " + str(wtp.addr) +
+            " and lvap " + str(lvap_addr) +
+            " is " + str(self.dl_est_rate[wtp.addr,lvap_addr][0]))            
             if len(self.dl_rssi[wtp.addr,lvap_addr]) > self.sliding_window_samples :
                 del self.dl_rssi[wtp.addr,lvap_addr][self.sliding_window_samples:]
                 del self.dl_est_rate[wtp.addr,lvap_addr][self.sliding_window_samples:]
@@ -190,11 +198,19 @@ class AquametMobilityManager(EmpowerApp):
             self.dl_arr_rate_pps[lvap_addr] = []
             
         self.dl_arr_rate_pps[lvap_addr].insert(0,arr_pps)
+        self.log.info("windNum: " + str(self.global_window_counter) +
+            " arr_rate_pps " +
+            " at lvap " + str(lvap_addr) +
+            " is " + str(self.dl_arr_rate_pps[lvap_addr][0]))            
 
         if lvap_addr not in self.dl_frame_len_bytes :
             self.dl_frame_len_bytes[lvap_addr] = []
 
         self.dl_frame_len_bytes[lvap_addr].insert(0,avg_frame_len_bytes- table.ETH_HEADER_BYTES)
+        self.log.info("windNum: " + str(self.global_window_counter) +
+            " frame_len_bytes " +
+            " at lvap " + str(lvap_addr) +
+            " is " + str(self.dl_frame_len_bytes[lvap_addr][0])) 
 
         if len(self.dl_arr_rate_pps[lvap_addr]) > self.sliding_window_samples :
             del self.dl_arr_rate_pps[lvap_addr][self.sliding_window_samples:]
@@ -238,11 +254,19 @@ class AquametMobilityManager(EmpowerApp):
             self.dl_pdr[wtp.addr, lvap_addr] = []
 
         self.dl_pdr[wtp.addr, lvap_addr].insert(0,pdr)
+        self.log.info("windNum: " + str(self.global_window_counter) +
+            " pdr between wtp " + str(wtp.addr) + 
+            " and lvap " + str(lvap_addr) +
+            " is " + str(self.dl_pdr[wtp.addr, lvap_addr][0])) 
         
         if (wtp.addr, lvap_addr) not in self.dl_meas_thput :
             self.dl_meas_thput[wtp.addr, lvap_addr] = []
 
         self.dl_meas_thput[wtp.addr, lvap_addr].insert(0,meas_thput_kbps)
+        self.log.info("windNum: " + str(self.global_window_counter) +
+            " meas_thput between" + str(wtp.addr) + 
+            " and lvap " + str(lvap_addr) +
+            " is " + str(self.self.dl_meas_thput[wtp.addr, lvap_addr][0])) 
 
         self.dl_aggr_attempts[wtp.addr][0] += tmp_att 
         self.dl_aggr_succ[wtp.addr][0] += tmp_succ
@@ -268,6 +292,10 @@ class AquametMobilityManager(EmpowerApp):
             self.dl_meas_rate[wtp.addr, lvap_addr] = []
 
         self.dl_meas_rate[wtp.addr, lvap_addr].insert(0,rate_with_max_attempts)
+        self.log.info("windNum: " + str(self.global_window_counter) +
+            " meas_rate between" + str(wtp.addr) + 
+            " and lvap " + str(lvap_addr) +
+            " is " + str(self.dl_meas_rate[wtp.addr, lvap_addr][0]))
 
         if len(self.dl_pdr[wtp.addr, lvap_addr]) > self.sliding_window_samples :
             del self.dl_pdr[wtp.addr,lvap_addr][self.sliding_window_samples:]
@@ -435,6 +463,9 @@ class AquametMobilityManager(EmpowerApp):
             if wtp.state == 'disconnected':
                 continue
 
+            self.log.info("windNum: " + str(self.global_window_counter) +
+                " aggr_pdr at wtp " + str(wtp.addr) +
+                " is " + str(float(self.dl_aggr_succ[wtp.addr][0])/self.dl_aggr_attempts[wtp.addr][0]))
             self.dl_aggr_attempts[wtp.addr] = self.dl_aggr_attempts[wtp.addr][1::] 
             self.dl_aggr_succ[wtp.addr] = self.dl_aggr_succ[wtp.addr][1::]
             self.dl_aggr_attempts[wtp.addr].insert(0,0) 
