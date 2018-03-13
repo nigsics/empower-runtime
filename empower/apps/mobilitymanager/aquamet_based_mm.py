@@ -266,7 +266,7 @@ class AquametMobilityManager(EmpowerApp):
         self.log.info("windNum: " + str(self.global_window_counter) +
             " meas_thput between" + str(wtp.addr) + 
             " and lvap " + str(lvap_addr) +
-            " is " + str(self.self.dl_meas_thput[wtp.addr, lvap_addr][0])) 
+            " is " + str(self.dl_meas_thput[wtp.addr, lvap_addr][0]))
 
         self.dl_aggr_attempts[wtp.addr][0] += tmp_att 
         self.dl_aggr_succ[wtp.addr][0] += tmp_succ
@@ -463,10 +463,18 @@ class AquametMobilityManager(EmpowerApp):
             if wtp.state == 'disconnected':
                 continue
 
-            self.log.info("windNum: " + str(self.global_window_counter) +
-                " aggr_pdr at wtp " + str(wtp.addr) +
-                " is " + str(float(self.dl_aggr_succ[wtp.addr][0])/self.dl_aggr_attempts[wtp.addr][0]))
-            self.dl_aggr_attempts[wtp.addr] = self.dl_aggr_attempts[wtp.addr][1::] 
+            n_attempts = self.dl_aggr_attempts[wtp.addr][0]
+
+            if n_attempts > 0:
+                self.log.info("windNum: " + str(self.global_window_counter) +
+                    " aggr_pdr at wtp " + str(wtp.addr) +
+                    " is " + str(float(self.dl_aggr_succ[wtp.addr][0])/self.dl_aggr_attempts[wtp.addr][0]))
+            else:
+                self.log.info("windNum: " + str(self.global_window_counter) +
+                              " aggr_pdr at wtp " + str(wtp.addr) +
+                              " is 0")
+
+            self.dl_aggr_attempts[wtp.addr] = self.dl_aggr_attempts[wtp.addr][1::]
             self.dl_aggr_succ[wtp.addr] = self.dl_aggr_succ[wtp.addr][1::]
             self.dl_aggr_attempts[wtp.addr].insert(0,0) 
             self.dl_aggr_succ[wtp.addr].insert(0,0)
