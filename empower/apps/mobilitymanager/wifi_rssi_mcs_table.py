@@ -49,6 +49,9 @@ def GetMcsFromSnr(snr_db):
 		print("ERROR: received snr is < 0")
 		return(-1) 
 	if WIFI_STD == "g20mhz" :
+		if snr_db_lower >= len(g_mcs_table) :
+			return (g_mcs_table[len(g_mcs_table) -1])
+
 		return(g_mcs_table[snr_db_lower])
 	elif WIFI_STD == "n20mhz" :
 		return(n_mcs_table[0][snr_db_lower])
@@ -79,4 +82,4 @@ def ack_time (mcs) :
 		rate_ack = 2000
 
 	return ((float(ACK_BYTES + WIFI_MAC_HEADER_BYTES * 8 * 1000) / float(rate_ack)) \
-		+ float(WIFI_PHY_HEADER_BYTES*8*1000)/float(basic_rate[WIFI_STD]))
+		+ WIFI_PLCP_HEADER_PREAMBLE_TIME)

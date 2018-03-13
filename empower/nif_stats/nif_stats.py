@@ -20,6 +20,7 @@
 from construct import UBInt8
 from construct import UBInt16
 from construct import UBInt32
+from construct import UBInt64
 from construct import Bytes
 from construct import Sequence
 from construct import Container
@@ -39,8 +40,8 @@ from empower.lvapp import PT_VERSION
 from empower.main import RUNTIME
 
 
-PT_NIF_REQUEST = 0x100
-PT_NIF_RESPONSE = 0x101
+PT_NIF_REQUEST = 0x90
+PT_NIF_RESPONSE = 0x91
 
 NIF_STATS_ENTRY = Sequence("rates",
                        UBInt8("rate"),
