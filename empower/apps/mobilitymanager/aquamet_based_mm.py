@@ -27,7 +27,7 @@ class AquametMobilityManager(EmpowerApp):
 
     # The mac address of the client whose throughput is being monitored 
     # and hadover done based on attainable throughput
-    tagged_sta_mac_addr='a4:34:d9:bf:50:ef'
+    tagged_sta_mac_addr='00:21:6A:71:F6:EA'
 
     num_lvap_in_network = 0
     num_wtp_in_network = 0
@@ -39,6 +39,8 @@ class AquametMobilityManager(EmpowerApp):
     sliding_window_samples = 20
     tagged_lvap_sample_counter = 0
     global_window_counter = 0
+    thput_threshold = 2000 #threshold in Kbps
+    tolerance_prob = 0.7 # tolernace probability
 
     last_counters_stats = None
     last_nif_stats = None
@@ -57,6 +59,7 @@ class AquametMobilityManager(EmpowerApp):
     dl_rssi={}#[wtp,lvap][sliding window]
     dl_meas_thput={}#[wtp,lvap][sliding window]
     dl_att_thput={}#[wtp,lvap][sliding window]
+    dl_meas_prob_good_thput = {}
 
     dl_aggr_attempts={}#[wtp][sliding window]
     dl_aggr_succ={}#[wtp][sliding window]
@@ -224,7 +227,11 @@ class AquametMobilityManager(EmpowerApp):
         tmp_att = att - self.last_att
         tmp_acked_bytes = acked_bytes - self.last_acked_bytes
 
-        pdr = float(tmp_succ) / tmp_att    
+        if tmp_att == 0:
+            pdr = 0
+        else:
+            pdr = float(tmp_succ) / tmp_att
+
         meas_thput_kbps = float(tmp_acked_bytes*8) / self.window_time
         
         if (wtp.addr, lvap_addr) not in self.dl_pdr :
@@ -247,15 +254,18 @@ class AquametMobilityManager(EmpowerApp):
         
         rate_with_max_attempts = 0
         max_att = 0
-        for rate in self.nif.rates :
+        for rate in nif.rates :
             if rate in self.last_nif_stats.rates :
-                num_att = self.nif.rates[rate]['hist_attempts'] - self.last_nif_stats.rates[rate]['hist_attempts']
+                num_att = nif.rates[rate]['hist_attempts'] - self.last_nif_stats.rates[rate]['hist_attempts']
             else :
-                num_att = self.nif.rates[rate]['hist_attempts']
+                num_att = nif.rates[rate]['hist_attempts']
                 
-            if num_att > max_attempts :
-                max_attempts = num_att
+            if num_att > max_att :
+                max_att = num_att
                 rate_with_max_attempts = rate
+
+        if (wtp.addr, lvap_addr) not in self.dl_meas_rate:
+            self.dl_meas_rate[wtp.addr, lvap_addr] = []
 
         self.dl_meas_rate[wtp.addr, lvap_addr].insert(0,rate_with_max_attempts)
 
@@ -334,17 +344,23 @@ class AquametMobilityManager(EmpowerApp):
         ## fix
         ## corrected
         # This is a dictionary of all the lvaps currently in the network.
-        all_lvaps = self.lvaps()
-        # This is the EtherAddress object for the specified mac address. 
-        self.log.info("windNum: " + str(self.global_window_counter) +
-            " waiting for tagged sta to come up")
+        all_lvaps = list(self.lvaps())
+        # This is the EtherAddress object for the specified mac address.
         tagged_lvap_etherAddr_obj = EtherAddress(self.tagged_sta_mac_addr)
         # Proceed further only if the lvap I am interested in following has joined the network
-        if tagged_lvap_etherAddr_obj in all_lvaps:
+
+        tagged_lvap = None
+        for lvap in all_lvaps:
+            if lvap.addr == tagged_lvap_etherAddr_obj:
+                tagged_lvap = lvap
+
+        if tagged_lvap is None:
+            self.log.info("windNum: " + str(self.global_window_counter) +
+                          " waiting for tagged sta to come up")
+        else:
             self.log.info("windNum: " + str(self.global_window_counter) +
                 " tagged sta associated")
-            # This is the EtherAddress object for the specified mac address. 
-            tagged_lvap = all_lvaps[tagged_lvap_etherAddr_obj]
+            # This is the EtherAddress object for the specified mac address.
             tagged_lvap_curr_assoc_wtp = tagged_lvap.wtp
             best_target_wtp = tagged_lvap_curr_assoc_wtp
             self.log.info("windNum: " + str(self.global_window_counter) +
@@ -357,7 +373,7 @@ class AquametMobilityManager(EmpowerApp):
                                             for i in self.dl_meas_thput[tagged_lvap_curr_assoc_wtp.addr,tagged_lvap.addr])
                                             /float(self.sliding_window_samples))
                 self.log.info("windNum: " + str(self.global_window_counter) +
-                    " P(meas_thput >= ",self.thput_threshold,") = ",self.dl_meas_prob_good_thput[tagged_lvap_curr_assoc_wtp.addr,tagged_lvap.addr])
+                    " P(meas_thput >= " + str(self.thput_threshold) + ") = " + str(self.dl_meas_prob_good_thput[tagged_lvap_curr_assoc_wtp.addr,tagged_lvap.addr]))
                 if self.dl_meas_prob_good_thput[tagged_lvap_curr_assoc_wtp.addr,tagged_lvap.addr] < self.tolerance_prob :
                     self.log.info("windNum: " + str(self.global_window_counter) +
                         " tolerance level crossed P(meas_thput >= " + str(self.thput_threshold) + ") is < " + str(self.tolerance_prob))
