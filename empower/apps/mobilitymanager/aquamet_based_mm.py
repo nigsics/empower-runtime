@@ -20,6 +20,7 @@ from empower.core.app import DEFAULT_PERIOD
 import empower.apps.mobilitymanager.wifi_rssi_mcs_table as table
 import copy
 from empower.datatypes.etheraddress import EtherAddress
+import time
 
 from empower.main import RUNTIME
 
@@ -39,14 +40,14 @@ class AquametMobilityManager(EmpowerApp):
     sliding_window_samples = 20
     tagged_lvap_sample_counter = 0
     global_window_counter = 0
-    thput_threshold = 2000 #threshold in Kbps
+    thput_threshold = 1400 #threshold in Kbps
     tolerance_prob = 0.7 # tolernace probability
 
-    last_counters_stats = None
-    last_nif_stats = None
-    last_succ = 0
-    last_att = 0
-    last_acked_bytes = 0
+    last_counters_stats = {}#[lvap]
+    last_nif_stats = {}#[lvap]
+    last_succ = {}#[lvap]
+    last_att = {}#[lvap]
+    last_acked_bytes = {}#[lvap]
 
     dl_frame_len_bytes={}#[lvap][sliding window]
     dl_arr_rate_pps={}#[lvap][sliding window]
@@ -123,10 +124,11 @@ class AquametMobilityManager(EmpowerApp):
 
     def rssi_callback(self, ucqm):
         """ New RSSI stats available. """
-        self.log.info("windNum: " + str(self.global_window_counter) +
-            " rssi ucqm msg recv from wtp: " + str(ucqm.block.radio.addr) +
-            " from interface: " + str(ucqm.block.hwaddr) +
-            " on channel: " + str(ucqm.block.channel))
+     #   self.log.info("windNum: " + str(self.global_window_counter) +
+     #       " rssi ucqm msg recv from wtp: " + str(ucqm.block.radio.addr) +
+     #       " from interface: " + str(ucqm.block.hwaddr) +
+     #       " on channel: " + str(ucqm.block.channel) + str(time.time()))
+
         #self.log.info("New UCQM received from %s" % ucqm.block)
         self.rssi_stats_counter += 1
         #loop over the lvaps that this wtp has heard from
@@ -142,20 +144,21 @@ class AquametMobilityManager(EmpowerApp):
                 self.dl_rssi[wtp.addr, lvap_addr] = []
 
             self.dl_rssi[wtp.addr,lvap_addr].insert(0,ucqm.maps[lvap_addr]['last_rssi_avg'])
-            self.log.info("windNum: " + str(self.global_window_counter) +
-            " last_rssi_avg between wtp " + str(wtp.addr) +
-            " and lvap " + str(lvap_addr) +
-            " is " + str(self.dl_rssi[wtp.addr,lvap_addr][0]))
+            if lvap_addr == self.tagged_sta_mac_addr:
+                self.log.info("windNum: " + str(self.global_window_counter) +
+                    " last_rssi_avg between wtp " + str(wtp.addr) +
+                    " and lvap " + str(lvap_addr) +
+                    " is " + str(self.dl_rssi[wtp.addr,lvap_addr][0]))
 
             if (wtp.addr,lvap_addr) not in self.dl_est_rate:
                 self.dl_est_rate[wtp.addr, lvap_addr] = []
 
             self.dl_est_rate[wtp.addr,lvap_addr].insert(0,
                         table.GetEstimatedSendingRateFromRssi(ucqm.maps[lvap_addr]['last_rssi_avg']))
-            self.log.info("windNum: " + str(self.global_window_counter) +
-            " est_rate between wtp " + str(wtp.addr) +
-            " and lvap " + str(lvap_addr) +
-            " is " + str(self.dl_est_rate[wtp.addr,lvap_addr][0]))            
+            #self.log.info("windNum: " + str(self.global_window_counter) +
+            #" est_rate between wtp " + str(wtp.addr) +
+            #" and lvap " + str(lvap_addr) +
+            #" is " + str(self.dl_est_rate[wtp.addr,lvap_addr][0]))
             if len(self.dl_rssi[wtp.addr,lvap_addr]) > self.sliding_window_samples :
                 del self.dl_rssi[wtp.addr,lvap_addr][self.sliding_window_samples:]
                 del self.dl_est_rate[wtp.addr,lvap_addr][self.sliding_window_samples:]
@@ -163,21 +166,21 @@ class AquametMobilityManager(EmpowerApp):
 
     def counters_callback(self, stats) :
         """ New stats available. """
-        self.log.info("New counters received from %s" % stats.lvap)
+    #    self.log.info("New counters received from %s" % stats.lvap)
         self.bincounter_stats_counter += 1
         ## fix
         lvap_addr = stats.lvap
         #wtp = stats.lvap.wtp
-        self.log.info("windNum: " + str(self.global_window_counter) +
-            " bin counter stats recv from lvap: " + str(lvap_addr))
+     #   self.log.info("windNum: " + str(self.global_window_counter) +
+     #       " bin counter stats recv from lvap: " + str(lvap_addr)+ str(time.time()))
 
         # For each frame length I have a count. 
         # I am just going to add them all up  and average
         # The counters here seem to be upcounters.
 
-        if self.last_counters_stats is not None :
-            this_window_bytes = sum(stats.tx_bytes) - sum(self.last_counters_stats.tx_bytes)
-            this_window_pkts = sum(stats.tx_packets) - sum(self.last_counters_stats.tx_packets)
+        if lvap_addr in self.last_counters_stats :
+            this_window_bytes = sum(stats.tx_bytes) - sum(self.last_counters_stats[lvap_addr].tx_bytes)
+            this_window_pkts = sum(stats.tx_packets) - sum(self.last_counters_stats[lvap_addr].tx_packets)
             arr_pps =  float((this_window_pkts))*1000.0/self.window_time# pps
             if this_window_pkts == 0 :
                 avg_frame_len_bytes = 0
@@ -192,7 +195,7 @@ class AquametMobilityManager(EmpowerApp):
             else :    
                 avg_frame_len_bytes = float(sum(stats.tx_bytes))/sum(stats.tx_packets)
         
-        self.last_counters_stats = copy.copy(stats)
+        self.last_counters_stats[lvap_addr] = copy.copy(stats)
         
         if lvap_addr not in self.dl_arr_rate_pps :
             self.dl_arr_rate_pps[lvap_addr] = []
@@ -224,8 +227,8 @@ class AquametMobilityManager(EmpowerApp):
         ## fix
         lvap_addr = nif.lvap
         wtp = RUNTIME.lvaps[lvap_addr].wtp
-        self.log.info("windNum: " + str(self.global_window_counter) +
-            " nif stats recv from lvap: " + str(lvap_addr))
+    #    self.log.info("windNum: " + str(self.global_window_counter) +
+    #        " nif stats recv from lvap: " + str(lvap_addr)+ str(time.time()))
 
         if (lvap_addr == EtherAddress(self.tagged_sta_mac_addr)) :
             self.tagged_lvap_sample_counter += 1
@@ -239,9 +242,14 @@ class AquametMobilityManager(EmpowerApp):
             att += nif.rates[rate]['hist_attempts']
             acked_bytes += nif.rates[rate]['hist_acked_bytes']
 
-        tmp_succ = succ - self.last_succ
-        tmp_att = att - self.last_att
-        tmp_acked_bytes = acked_bytes - self.last_acked_bytes
+        if lvap_addr in self.last_succ:
+            tmp_succ = succ - self.last_succ[lvap_addr]
+            tmp_att = att - self.last_att[lvap_addr]
+            tmp_acked_bytes = acked_bytes - self.last_acked_bytes[lvap_addr]
+        else:
+            tmp_succ = succ
+            tmp_att = att
+            tmp_acked_bytes = acked_bytes
 
         if tmp_att == 0:
             pdr = 0
@@ -264,29 +272,38 @@ class AquametMobilityManager(EmpowerApp):
 
         self.dl_meas_thput[wtp.addr, lvap_addr].insert(0,meas_thput_kbps)
         self.log.info("windNum: " + str(self.global_window_counter) +
-            " meas_thput between" + str(wtp.addr) + 
+            " meas_thput between " + str(wtp.addr) +
             " and lvap " + str(lvap_addr) +
             " is " + str(self.dl_meas_thput[wtp.addr, lvap_addr][0]))
 
         self.dl_aggr_attempts[wtp.addr][0] += tmp_att 
         self.dl_aggr_succ[wtp.addr][0] += tmp_succ
-
-        self.last_succ = succ
-        self.last_att = att
-        self.last_acked_bytes = acked_bytes
-        self.last_nif_stats = copy.copy(nif)
         
         rate_with_max_attempts = 0
         max_att = 0
-        for rate in nif.rates :
-            if rate in self.last_nif_stats.rates :
-                num_att = nif.rates[rate]['hist_attempts'] - self.last_nif_stats.rates[rate]['hist_attempts']
-            else :
-                num_att = nif.rates[rate]['hist_attempts']
+        if self.last_nif_stats[lvap_addr] is not None:
+            for rate in nif.rates :
+                if rate in self.last_nif_stats[lvap_addr].rates :
+                    num_att = nif.rates[rate]['hist_attempts'] - self.last_nif_stats[lvap_addr].rates[rate]['hist_attempts']
+                else :
+                    num_att = nif.rates[rate]['hist_attempts']
                 
-            if num_att > max_att :
-                max_att = num_att
-                rate_with_max_attempts = rate
+                if num_att > max_att :
+                    max_att = num_att
+                    rate_with_max_attempts = rate
+        else:
+            for rate in nif.rates:
+                num_att = nif.rates[rate]['hist_attempts']
+
+                if num_att > max_att:
+                    max_att = num_att
+                    rate_with_max_attempts = rate
+
+
+        self.last_succ[lvap_addr] = succ
+        self.last_att[lvap_addr] = att
+        self.last_acked_bytes[lvap_addr] = acked_bytes
+        self.last_nif_stats[lvap_addr] = copy.copy(nif)
 
         if (wtp.addr, lvap_addr) not in self.dl_meas_rate:
             self.dl_meas_rate[wtp.addr, lvap_addr] = []
@@ -310,17 +327,13 @@ class AquametMobilityManager(EmpowerApp):
 
 
     # Evaluate for one wtp association set
-    def nif_evaluate_stats(self, wtp_addr, wtp_assoc_set) :   
+    def nif_evaluate_stats(self, wtp_addr, wtp_assoc_set, wtp,block) :
         self.dl_num_active_clients[wtp_addr] = [0]*self.sliding_window_samples
         # All lvaps associated with that wtp
-        for block in wtp.supports:
-            # I am assuming that of all the blocks only 1 block has lvaps on it. 
-            # the others will return NOne for lvaps
-            if self.lvaps(block=block) is not None:
-                # This is the block on which lvaps are scheduled
-                wtp_assoc_set = copy.copy(self.lvaps(block=block))
+        this_wtps_lvaps = self.lvaps(block=block)
+        for lvap in  this_wtps_lvaps:
+            self.dl_att_thput[wtp_addr,lvap.addr] = [0]*self.sliding_window_samples
 
-        self.dl_att_thput[wtp_addr,:] = [0]*self.sliding_window_samples
         for w in range(0,self.sliding_window_samples) :
             self.dl_active_clients = []
             # Find the number of active stations in this window.
@@ -358,7 +371,7 @@ class AquametMobilityManager(EmpowerApp):
         """ Periodic job. """
         self.global_window_counter += 1
         self.log.info("windNum: "+ str(self.global_window_counter) +
-            " loop timer fired")
+            " loop timer fired" + str(time.time()))
         # Add callbacks for the new WTPs and LVAPs that 
         # have joined the network since last loop periodic trigger
         self.wtp_up_initialize()
@@ -419,15 +432,16 @@ class AquametMobilityManager(EmpowerApp):
                             # Evaluate attainable throughput if tagged sta is moved ot this wtp   
                             # All lvaps associated with that wtp
                             for block in wtp.supports:
-                                # I am assuming that of all the blocks only 1 block has lvaps on it. 
-                                # the others will return NOne for lvaps
-                                if self.lvaps(block=block) is not None:
+                                if block.channel != tagged_lvap.block.channel:
+                                    # I am assuming that of all the blocks only 1 block has lvaps on it.
+                                    # the others will return NOne for lvaps
+                                    #if self.lvaps(block=block) is not None:
                                     # This is the block on which lvaps are scheduled
                                     wtp_assoc_set = copy.copy(self.lvaps(block=block))
                                     wtp_assoc_set.append(tagged_lvap)
                                     self.log.info("windNum: " + str(self.global_window_counter) +
-                                        " evaluating tagged sta assoc with wtp: " + str(wtp.addr))
-                                    self.nif_evaluate_stats(wtp.addr, wtp_assoc_set)
+                                    " evaluating tagged sta assoc with wtp: " + str(wtp.addr))
+                                    self.nif_evaluate_stats(wtp.addr, wtp_assoc_set,wtp,block)
 
                             prob_satisfying_qos = \
                                         (sum(i >= self.thput_threshold \
@@ -449,7 +463,10 @@ class AquametMobilityManager(EmpowerApp):
 
                     # This is supposed to trigger the handover.
                     if association_changed_flag : 
-                        tagged_lvap.wtp = best_target_wtp
+                        #tagged_lvap.wtp = best_target_wtp
+                        for wtp_block in best_target_wtp.supports():
+                            if wtp_block.channel != tagged_lvap.block.channel:
+                                tagged_lvap.block = best_target_wtp.block
                         # Reset counters and the measured throughput window since these values cannot be used anymore. 
                         self.tagged_lvap_sample_counter = 0
                         self.dl_meas_thput[tagged_lvap_curr_assoc_wtp.addr,tagged_lvap.addr]=[]
@@ -457,27 +474,30 @@ class AquametMobilityManager(EmpowerApp):
                                     "handover to target wtp: " + str(best_target_wtp.addr))
 
 
-        # Reset the things I need to after each loop or each Wm
-        for wtp in self.wtps():
+            # Reset the things I need to after each loop or each Wm
+            for wtp in self.wtps():
 
-            if wtp.state == 'disconnected':
-                continue
+                if wtp.state == 'disconnected':
+                    continue
 
-            n_attempts = self.dl_aggr_attempts[wtp.addr][0]
+                #if wtp.addr not in self.dl_aggr_attempts:
+                #    self.dl_aggr_attempts[wtp.addr] = []
 
-            if n_attempts > 0:
-                self.log.info("windNum: " + str(self.global_window_counter) +
-                    " aggr_pdr at wtp " + str(wtp.addr) +
-                    " is " + str(float(self.dl_aggr_succ[wtp.addr][0])/self.dl_aggr_attempts[wtp.addr][0]))
-            else:
-                self.log.info("windNum: " + str(self.global_window_counter) +
-                              " aggr_pdr at wtp " + str(wtp.addr) +
-                              " is 0")
+                n_attempts = self.dl_aggr_attempts[wtp.addr][0]
 
-            self.dl_aggr_attempts[wtp.addr] = self.dl_aggr_attempts[wtp.addr][1::]
-            self.dl_aggr_succ[wtp.addr] = self.dl_aggr_succ[wtp.addr][1::]
-            self.dl_aggr_attempts[wtp.addr].insert(0,0) 
-            self.dl_aggr_succ[wtp.addr].insert(0,0)
+                if n_attempts > 0:
+                    self.log.info("windNum: " + str(self.global_window_counter) +
+                        " aggr_pdr at wtp " + str(wtp.addr) +
+                        " is " + str(float(self.dl_aggr_succ[wtp.addr][0])/self.dl_aggr_attempts[wtp.addr][0]))
+                else:
+                    self.log.info("windNum: " + str(self.global_window_counter) +
+                                  " aggr_pdr at wtp " + str(wtp.addr) +
+                                  " is 0")
+
+                self.dl_aggr_attempts[wtp.addr] = self.dl_aggr_attempts[wtp.addr][1::]
+                self.dl_aggr_succ[wtp.addr] = self.dl_aggr_succ[wtp.addr][1::]
+                self.dl_aggr_attempts[wtp.addr].insert(0,0)
+                self.dl_aggr_succ[wtp.addr].insert(0,0)
 
 
 def launch(tenant_id, every=DEFAULT_PERIOD):
