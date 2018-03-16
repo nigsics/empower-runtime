@@ -176,8 +176,8 @@ class LVAPPConnection:
 
         if self.server.pt_types[msg_type]:
 
-            LOG.info("Got message type %u (%s)", msg_type,
-                     self.server.pt_types[msg_type].name)
+            #LOG.info("Got message type %u (%s)", msg_type,
+            #         self.server.pt_types[msg_type].name)
 
             msg = self.server.pt_types[msg_type].parse(self.__buffer)
             addr = EtherAddress(msg.wtp)
@@ -1147,6 +1147,8 @@ class LVAPPConnection:
                              csa_switch_mode=0,
                              csa_switch_count=3)
 
+        print(del_lvap)
+
         self.send_message(del_lvap, DEL_LVAP)
 
     def send_set_port(self, tx_policy):
@@ -1261,6 +1263,8 @@ class LVAPPConnection:
             add_lvap.length = add_lvap.length + len(b_ssid) + 1
 
         LOG.info("Add lvap %s", lvap)
+
+        print(add_lvap)
 
         msg = ADD_LVAP.build(add_lvap)
         self.stream.write(msg)
