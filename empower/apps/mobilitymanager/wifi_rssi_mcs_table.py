@@ -90,8 +90,8 @@ def GetEstimatedSendingRateFromRssi(rssi_db) :
 	return(GetSendingRateFromMcs(GetMcsFromSnr(GetSnrFromRssi(rssi_db))))
 
 # time in micro seconds
-def ack_time (mcs) : 
-	if GetSendingRateFromMcs(mcs) >= 24000 :
+def ack_time (rate) :
+	if rate >= 24000 :
 		rate_ack = 24000
 	else :
 		rate_ack = 2000
