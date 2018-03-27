@@ -310,7 +310,7 @@ class AquametMobilityManager(EmpowerApp):
 
 
     # Evaluate for one wtp association set
-    def nif_evaluate_stats(self, wtp_addr, wtp_assoc_set) :   
+    def nif_evaluate_stats(self, wtp_addr, wtp_assoc_set, wtp) :
         self.dl_num_active_clients[wtp_addr] = [0]*self.sliding_window_samples
         # All lvaps associated with that wtp
         for block in wtp.supports:
@@ -427,7 +427,7 @@ class AquametMobilityManager(EmpowerApp):
                                     wtp_assoc_set.append(tagged_lvap)
                                     self.log.info("windNum: " + str(self.global_window_counter) +
                                         " evaluating tagged sta assoc with wtp: " + str(wtp.addr))
-                                    self.nif_evaluate_stats(wtp.addr, wtp_assoc_set)
+                                    self.nif_evaluate_stats(wtp.addr, wtp_assoc_set,wtp)
 
                             prob_satisfying_qos = \
                                         (sum(i >= self.thput_threshold \
